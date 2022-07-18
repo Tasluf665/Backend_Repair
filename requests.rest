@@ -1,2 +1,19 @@
+
 GET http://localhost:3001/api/agents?pageNumber=2&pageSize=10&name=ta
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ0YjViNGQ0MWI4NDUxNjY5ZjYyMzUiLCJpYXQiOjE2NTgxMTI1ODF9.3mGS0-NIEklqtTC8x9DB6nICwqhDrwDQt0jy7FGhHCY
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQzZTFmM2ZhM2I0NzRkZGFkZGMxZmIiLCJpYXQiOjE2NTgxNTIxNjB9.uN8uQL4luqCRsumXysjRWi_JKOa1reROk8-S64-B89w
+
+###
+
+GET http://localhost:3001/api/technicians?pageNumber=1&pageSize=10
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQzZTFmM2ZhM2I0NzRkZGFkZGMxZmIiLCJpYXQiOjE2NTgxNTIxNjB9.uN8uQL4luqCRsumXysjRWi_JKOa1reROk8-S64-B89w
+
+###
+
+POST http://localhost:3001/api/auth/
+Content-Type: application/json
+
+{
+    "email": "rhyme665@gmail.com",
+    "password": "12345"
+}
+

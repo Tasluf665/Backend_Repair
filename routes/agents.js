@@ -20,7 +20,7 @@ router.get(
       .sort("name")
       .select("-__v");
 
-    res.send({ agents, count });
+    res.send({ data: agents, count });
   })
 );
 
