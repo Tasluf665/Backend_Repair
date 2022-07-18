@@ -10,13 +10,17 @@ router.get(
   asyncMiddleware(async (req, res) => {
     const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
     const pageSize = req.query.pageSize ? req.query.pageSize : 10;
-    const agents = await Agent.find()
+    const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
+
+    const count = await Agent.find({ name: search }).count();
+
+    let agents = await Agent.find({ name: search })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .sort("name")
       .select("-__v");
 
-    res.send(agents);
+    res.send({ agents, count });
   })
 );
 
