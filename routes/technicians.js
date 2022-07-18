@@ -7,9 +7,19 @@ const asyncMiddleware = require("../middleware/async");
 router.get(
   "/",
   asyncMiddleware(async (req, res) => {
-    const technicians = await Technician.find().sort("name");
+    const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
+    const pageSize = req.query.pageSize ? req.query.pageSize : 10;
+    const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
 
-    res.send(technicians);
+    const count = await Technician.find({ name: search }).count();
+
+    let technicians = await Technician.find({ name: search })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .sort("name")
+      .select("-__v");
+
+    res.send({ data: technicians, count });
   })
 );
 
