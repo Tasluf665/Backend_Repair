@@ -19,8 +19,17 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
+if (!config.get("DB_PASSWORD")) {
+  console.error("FATAL ERROR: DB_PASSWORD is not define");
+  process.exit(1);
+}
+
 mongoose
-  .connect("mongodb://localhost/repair")
+  .connect(
+    `mongodb+srv://Tasluf:${config.get(
+      "DB_PASSWORD"
+    )}@cluster0.gvcib.mongodb.net/?retryWrites=true&w=majority`
+  )
   .then(() => console.log("Connected with mongodb"))
   .catch((err) => console.log("Could not connect to mongodb", err));
 

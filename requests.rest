@@ -1,12 +1,12 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQzZTFmM2ZhM2I0NzRkZGFkZGMxZmIiLCJpYXQiOjE2NTgxNTIxNjB9.uN8uQL4luqCRsumXysjRWi_JKOa1reROk8-S64-B89w
 
-
-GET http://localhost:3001/api/agents?pageNumber=2&pageSize=10&name=ta
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQzZTFmM2ZhM2I0NzRkZGFkZGMxZmIiLCJpYXQiOjE2NTgxNTIxNjB9.uN8uQL4luqCRsumXysjRWi_JKOa1reROk8-S64-B89w
+GET http://localhost:3001/api/agents?pageNumber=1&pageSize=10&name=ta
+x-auth-token: {{token}}
 
 ###
 
 GET http://localhost:3001/api/technicians?pageNumber=1&pageSize=10
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQzZTFmM2ZhM2I0NzRkZGFkZGMxZmIiLCJpYXQiOjE2NTgxNTIxNjB9.uN8uQL4luqCRsumXysjRWi_JKOa1reROk8-S64-B89w
+x-auth-token: {{token}}
 
 ###
 
@@ -18,3 +18,17 @@ Content-Type: application/json
     "password": "12345"
 }
 
+###
+
+POST http://localhost:3001/api/address
+x-auth-token: {{token}}
+Content-Type: application/json
+
+
+{
+    "id": "R3921298",
+    "name": "Barishal",
+    "nameLocal": "Barishal",
+    "parentId": "R184640",
+    "displayName": "Barishal"
+}

@@ -7,7 +7,7 @@ const admin = require("../middleware/admin");
 
 router.post(
   "/",
-  [auth, admin],
+  auth,
   asyncMiddleware(async (req, res) => {
     const { error } = validateAddress(req.body);
     if (error) return res.status(400).send(error.details[0].message);

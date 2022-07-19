@@ -20,8 +20,6 @@ router.get(
       .sort("name")
       .select("-__v");
 
-    console.log("Testing");
-
     res.send({ data: agents, count });
   })
 );
