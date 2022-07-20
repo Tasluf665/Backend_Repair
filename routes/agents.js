@@ -8,11 +8,11 @@ router.get(
   "/",
   auth,
   asyncMiddleware(async (req, res) => {
-    const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
-    const pageSize = req.query.pageSize ? req.query.pageSize : 10;
     const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
-
     const count = await Agent.find({ name: search }).count();
+
+    const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
+    const pageSize = req.query.pageSize ? req.query.pageSize : count;
 
     let agents = await Agent.find({ name: search })
       .skip((pageNumber - 1) * pageSize)

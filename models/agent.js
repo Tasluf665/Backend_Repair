@@ -10,7 +10,7 @@ const agentSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    minlength: 1,
+    minlength: 0,
     maxlength: 255,
   },
   phone: {
@@ -21,7 +21,7 @@ const agentSchema = new mongoose.Schema({
   },
   whatsappNumber: {
     type: String,
-    minlength: 1,
+    minlength: 0,
     maxlength: 15,
   },
   region: {
@@ -54,9 +54,9 @@ const Agent = mongoose.model("Agent", agentSchema);
 function validateAgent(agent) {
   const schema = Joi.object({
     name: Joi.string().min(1).max(50).required(),
-    email: Joi.string().min(1).max(255).email(),
+    email: Joi.string().min(0).max(255).email(),
     phone: Joi.string().min(1).max(15).required(),
-    whatsappNumber: Joi.string().min(1).max(15),
+    whatsappNumber: Joi.string().min(0).max(15),
     region: Joi.string().min(1).max(255).required(),
     city: Joi.string().min(1).max(255).required(),
     area: Joi.string().min(1).max(255).required(),
