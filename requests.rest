@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQzZTFmM2ZhM2I0NzRkZGFkZGMxZmIiLCJpYXQiOjE2NTgxNTIxNjB9.uN8uQL4luqCRsumXysjRWi_JKOa1reROk8-S64-B89w
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ1ZmM5M2YxYjM0ZjgzOTk3NjNlYTUiLCJpYXQiOjE2NTgyOTc1Njd9.HeSTuEsgDgijW7GLyGdNVyWPS63NDriqMf7xHIBo4aI
 
 GET http://localhost:3001/api/agents?pageNumber=1&pageSize=10&name=ta
 x-auth-token: {{token}}
@@ -32,3 +32,8 @@ Content-Type: application/json
     "parentId": "R184640",
     "displayName": "Barishal"
 }
+
+###
+
+GET http://localhost:3001/api/address?id=R3921322
+x-auth-token: {{token}}

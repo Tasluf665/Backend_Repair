@@ -71,8 +71,8 @@ router.get(
   "/",
   auth,
   asyncMiddleware(async (req, res) => {
-    if (!req.query.parentId) req.query.parentId = "R184640";
-    const address = await Address.find({ parentId: req.query.parentId })
+    if (!req.query.id) req.query.id = "R184640";
+    const address = await Address.find({ parentId: req.query.id })
       .sort("displayName")
       .select("-__v");
     if (!address)
