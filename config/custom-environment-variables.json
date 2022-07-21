@@ -1,4 +1,4 @@
 {
     "jwtPrivateKey": "repair_jwtPrivateKey",
-    "DB_PASSWORD": "DB_PASSWORD"
+    "Repair_DB_PASSWORD": "Repair_DB_PASSWORD"
 }

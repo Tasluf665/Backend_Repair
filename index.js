@@ -19,7 +19,7 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
-if (!config.get("DB_PASSWORD")) {
+if (!config.get("Repair_DB_PASSWORD")) {
   console.error("FATAL ERROR: DB_PASSWORD is not define");
   process.exit(1);
 }
@@ -27,7 +27,7 @@ if (!config.get("DB_PASSWORD")) {
 mongoose
   .connect(
     `mongodb+srv://Tasluf:${config.get(
-      "DB_PASSWORD"
+      "Repair_DB_PASSWORD"
     )}@cluster0.gvcib.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => console.log("Connected with mongodb"))
