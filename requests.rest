@@ -1,6 +1,6 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ1ZmM5M2YxYjM0ZjgzOTk3NjNlYTUiLCJpYXQiOjE2NTg0NTcwNzV9.AvJN70P5fZMUnL07EvHYJnBjL7n0jSJG2D6WUQIATcs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRhMGYyODNmYTViODNmZmVlZjc0NDciLCJpYXQiOjE2NTg1MDI1ODF9.r7h-LfDh-dknXT2zxkXTy88jREBlm9G0Qs7chZ6K1rA
 
-GET http://localhost:3001/api/agents
+GET http://localhost:3001/api/agents?pageNumber=1&pageSize=10
 x-auth-token: {{token}}
 
 ###

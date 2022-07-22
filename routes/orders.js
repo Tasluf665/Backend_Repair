@@ -19,12 +19,6 @@ router.get(
       .sort("name")
       .select("-__v");
 
-    technicians = technicians.map((item, index) => {
-      item._doc.id = (pageNumber - 1) * pageSize + index + 1;
-
-      return item._doc;
-    });
-
     res.send({ data: technicians, count });
   })
 );
