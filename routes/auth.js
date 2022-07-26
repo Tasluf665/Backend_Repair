@@ -4,6 +4,7 @@ const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const asyncMiddleware = require("../middleware/async");
+const { sendVerificationEmail } = require("../utils/SendEmail");
 
 router.post(
   "/",
@@ -21,6 +22,14 @@ router.post(
     );
     if (!validPassword)
       return res.status(400).send({ error: "Invalide email or password" });
+
+    if (!user.verified) {
+      sendVerificationEmail(user.email, user._id);
+      return res.status(400).send({
+        error:
+          "Email is not verified. Please check your email to verify your account",
+      });
+    }
 
     const token = user.generateAuthToken();
     res.send({

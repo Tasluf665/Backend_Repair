@@ -19,11 +19,24 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     minlength: 5,
     maxlength: 1024,
   },
-  isAdmin: Boolean,
+  isAdmin: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  googleId: {
+    type: String,
+    minlength: 5,
+    maxlength: 30,
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -40,7 +53,8 @@ function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(5).max(255).required(),
     email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(255).required(),
+    password: Joi.string().min(5).max(255),
+    googleId: Joi.string().min(5).max(30),
   });
 
   return schema.validate(user);

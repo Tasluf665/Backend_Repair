@@ -2,6 +2,8 @@ const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 const config = require("config");
 const cors = require("cors");
 const error = require("./middleware/error");
@@ -13,13 +15,14 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 
 const app = express();
+app.set("view engine", "ejs");
 
 if (!config.get("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not define");
   process.exit(1);
 }
 
-if (!config.get("Repair_DB_PASSWORD")) {
+if (!config.get("DB_PASSWORD")) {
   console.error("FATAL ERROR: DB_PASSWORD is not define");
   process.exit(1);
 }
@@ -27,7 +30,7 @@ if (!config.get("Repair_DB_PASSWORD")) {
 mongoose
   .connect(
     `mongodb+srv://Tasluf:${config.get(
-      "Repair_DB_PASSWORD"
+      "DB_PASSWORD"
     )}@cluster0.gvcib.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => console.log("Connected with mongodb"))
