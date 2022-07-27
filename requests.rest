@@ -29,6 +29,15 @@ Content-Type: application/json
     "password": "12345"
 }
 
+###
+
+POST http://localhost:3001/api/auth/forgot-password
+Content-Type: application/json
+
+{
+    "email": "tasluf665@gmail.com"
+}
+
 
 ###
 

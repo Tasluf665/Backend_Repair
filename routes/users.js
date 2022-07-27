@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { User, validateUser } = require("../models/user");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
-const auth = require("../middleware/auth");
-const asyncMiddleware = require("../middleware/async");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
+const axios = require("axios");
 
+const { User, validateUser } = require("../models/user");
+const auth = require("../middleware/auth");
+const asyncMiddleware = require("../middleware/async");
 const { sendVerificationEmail } = require("../utils/SendEmail");
 
 router.get(
@@ -63,41 +64,54 @@ router.get(
   })
 );
 
-router.post(
-  "/google",
-  asyncMiddleware(async (req, res) => {
-    const { error } = validateGoogleUser(req.body);
-    if (error) return res.status(400).send({ error: error.details[0].message });
+router.post("/google", async (req, res) => {
+  const { error } = validateGoogleUser(req.body);
+  if (error) return res.status(400).send({ error: error.details[0].message });
 
-    let user = await User.findOne({ email: req.body.email });
-    console.log(user);
+  const result = await axios.get(
+    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${req.body.accessToken}`
+  );
 
-    if (!user) {
-      user = new User(_.pick(req.body, ["name", "email", "googleId"]));
-      user.verified = true;
-      await user.save();
-    }
+  if (result.error)
+    return res.status(401).send({ error: "Unauthorized google auth token" });
 
-    if (!user.googleId) {
-      user.googleId = req.body.googleId;
-      await user.save();
-    }
+  if (result.data.email !== req.body.email)
+    return res.status(401).send({ error: "Unauthorized google auth token" });
 
-    const token = user.generateAuthToken();
-    res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: token,
-    });
-  })
-);
+  if (
+    result.data.issued_to !== process.env.REACT_NATIVE_APP_GOOGLE_CLIENT_ID &&
+    result.data.issued_to !== process.env.REACT_APP_GOOGLE_CLIENT_ID
+  )
+    return res.status(401).send({ error: "Unauthorized google auth token" });
+
+  let user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    user = new User(_.pick(req.body, ["name", "email", "googleId"]));
+    user.verified = true;
+    await user.save();
+  }
+
+  if (!user.googleId) {
+    user.googleId = req.body.googleId;
+    await user.save();
+  }
+
+  const token = user.generateAuthToken();
+  res.send({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    token: token,
+  });
+});
 
 function validateGoogleUser(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),
     name: Joi.string().min(5).max(255).required(),
     googleId: Joi.string().min(5).max(255).required(),
+    accessToken: Joi.string().min(5).max(255).required(),
   });
 
   return schema.validate(user);

@@ -37,6 +37,7 @@ mongoose
   .catch((err) => console.log("Could not connect to mongodb", err));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: "*" }));
 app.use("/api/address", address);
 app.use("/api/agents", agents);
