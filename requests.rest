@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRhMGYyODNmYTViODNmZmVlZjc0NDciLCJpYXQiOjE2NTg1MDI1ODF9.r7h-LfDh-dknXT2zxkXTy88jREBlm9G0Qs7chZ6K1rA
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
 
 GET http://localhost:3001/api/agents?pageNumber=2&pageSize=10
 x-auth-token: {{token}}
@@ -10,13 +10,22 @@ x-auth-token: {{token}}
 
 ###
 
+GET http://localhost:3001/api/users/me
+x-auth-token: {{token}}
+
+###
+
 POST http://localhost:3001/api/auth/
 Content-Type: application/json
 
 {
-    "email": "rhyme665@gmail.com",
+    "email": "tasluf665@gmail.com",
     "password": "12345"
 }
+
+###
+PATCH http://localhost:3001/api/users/update
+Content-Type: application/json
 
 ###
 
@@ -24,8 +33,8 @@ POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
-    "name": "Tasluf",
-    "email": "tasluf665@gmail.com",
+    "name": "Tasluf Morhshed",
+    "email": "tasluf15-12089@diu.edu.bd",
     "password": "12345"
 }
 
@@ -35,13 +44,30 @@ POST http://localhost:3001/api/auth/forgot-password
 Content-Type: application/json
 
 {
-    "email": "tasluf665@gmail.com"
+    "email": "tasluf15-12089@diu.edu.bd"
 }
 
 
 ###
 
 GET http://localhost:3001/api/auth/google
+
+###
+
+POST http://localhost:3001/api/users/addAddress
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "address": "Road 2/3",
+    "area": "Khulna",
+    "city": "Barishal",
+    "name": "R184640",
+    "phone": "Barishal",
+    "region": "Barishal",
+    "office": true,
+    "default": true
+}
 
 
 ###
@@ -61,7 +87,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3001/api/address?id=R3921322
+GET http://localhost:3001/api/address?id=R3824588
 x-auth-token: {{token}}
 
 ###

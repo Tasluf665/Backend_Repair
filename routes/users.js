@@ -7,7 +7,7 @@ const config = require("config");
 const Joi = require("joi");
 const axios = require("axios");
 
-const { User, validateUser } = require("../models/user");
+const { User, validateUser, UserAddress } = require("../models/user");
 const auth = require("../middleware/auth");
 const asyncMiddleware = require("../middleware/async");
 const { sendVerificationEmail } = require("../utils/SendEmail");
@@ -16,10 +16,75 @@ router.get(
   "/me",
   auth,
   asyncMiddleware(async (req, res) => {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user._id).select({
+      password: 0,
+      __v: 0,
+      isAdmin: 0,
+      verified: 0,
+      googleId: 0,
+    });
     res.send(user);
   })
 );
+
+router.post("/addAddress", auth, async (req, res) => {
+  const { error } = validateUserAddress(req.body);
+  if (error) return res.status(400).send({ error: error.details[0].message });
+
+  let user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+  const address = new UserAddress(
+    _.pick(req.body, [
+      "address",
+      "area",
+      "city",
+      "name",
+      "phone",
+      "region",
+      "office",
+    ])
+  );
+
+  user.addressess.push(address);
+  if (user.addressess.length === 1) {
+    user.defaultAddress = address._id;
+  }
+
+  if (req.body.defaultAddress) user.defaultAddress = address._id;
+
+  await user.save();
+
+  res.send({
+    success: "Address is added",
+  });
+});
+
+router.patch("/update", auth, async (req, res) => {
+  const { error } = validateUserUpdate(req.body);
+  if (error) return res.status(400).send({ error: error.details[0].message });
+
+  let user = await User.findById(req.user._id).select("-password");
+  if (!user) return res.status(400).send({ error: "User not found" });
+
+  if (req.body.name) {
+    user.name = req.body.name;
+  }
+  if (req.body.phone) {
+    user.phone = req.body.phone;
+  }
+  if (req.body.gender) {
+    user.gender = req.body.gender;
+  }
+  if (req.body.birthday) {
+    user.birthday = req.body.birthday;
+  }
+
+  await user.save();
+  res.send({
+    success: "User is updated successfully",
+  });
+});
 
 router.post(
   "/",
@@ -112,6 +177,32 @@ function validateGoogleUser(user) {
     name: Joi.string().min(5).max(255).required(),
     googleId: Joi.string().min(5).max(255).required(),
     accessToken: Joi.string().min(5).max(255).required(),
+  });
+
+  return schema.validate(user);
+}
+
+function validateUserUpdate(user) {
+  const schema = Joi.object({
+    name: Joi.string().min(5).max(255),
+    phone: Joi.string().min(5).max(255),
+    gender: Joi.string().min(1).max(255),
+    birthday: Joi.string().min(1).max(30),
+  });
+
+  return schema.validate(user);
+}
+
+function validateUserAddress(user) {
+  const schema = Joi.object({
+    address: Joi.string().min(1).max(255).required(),
+    area: Joi.string().min(1).max(255).required(),
+    city: Joi.string().min(1).max(255).required(),
+    name: Joi.string().min(1).max(255).required(),
+    phone: Joi.string().min(1).max(255).required(),
+    region: Joi.string().min(1).max(255).required(),
+    office: Joi.boolean().required(),
+    defaultAddress: Joi.boolean(),
   });
 
   return schema.validate(user);

@@ -1,0 +1,61 @@
+body{
+  margin: 0;
+}
+#start{
+ background-color: #34B3F1;
+ height: 225px;
+ width: 100%
+}
+
+#card1{
+  margin: auto;
+  position: absolute;
+  right: 37%;
+  bottom: 25%;
+}
+h3{
+  font-family: 'Montserrat', sans-serif;
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+h6{
+  font-family: 'Ubuntu', sans-serif;
+  padding-bottom: 13%
+
+}
+.lev-pass{
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 1.1rem;
+}
+#s-button{
+  font-family: 'Ubuntu', sans-serif;
+}
+
+
+/******************/
+#card2{
+  margin: auto;
+  position: absolute;
+  text-align: center;
+  right: 37%;
+  bottom: 25%;
+}
+.icon2{
+  color: #34B3F1;
+  padding: 2rem;
+}
+.icon2:hover{
+  color: #79DAE8;
+}
+p{
+  font-family: 'Ubuntu', sans-serif;
+}
+/******************/
+}
+.icon{
+  color: #34B3F1;
+  padding: 2.3rem;
+}
+.icon:hover{
+  color: #79DAE8;
+}

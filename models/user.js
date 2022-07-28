@@ -3,6 +3,52 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+const userAddressSchema = new mongoose.Schema({
+  address: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+  },
+  area: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+  },
+  city: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+  },
+  name: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+  },
+  phone: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+  },
+  region: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+  },
+  office: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+});
+
+const UserAddress = mongoose.model("UserAddress", userAddressSchema);
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -37,6 +83,24 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 30,
   },
+  phone: {
+    type: String,
+    minlength: 5,
+    maxlength: 20,
+  },
+  gender: {
+    type: String,
+    enum: ["Male", "Female", "Other"],
+  },
+  birthday: {
+    type: String,
+    minlength: 1,
+    maxlength: 30,
+  },
+  addressess: [userAddressSchema],
+  defaultAddress: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -62,3 +126,4 @@ function validateUser(user) {
 
 exports.User = User;
 exports.validateUser = validateUser;
+exports.UserAddress = UserAddress;
