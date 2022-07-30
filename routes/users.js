@@ -27,7 +27,7 @@ router.get(
   })
 );
 
-router.post("/addAddress", auth, async (req, res) => {
+router.post("/userAddress", auth, async (req, res) => {
   const { error } = validateUserAddress(req.body);
   if (error) return res.status(400).send({ error: error.details[0].message });
 
@@ -57,6 +57,58 @@ router.post("/addAddress", auth, async (req, res) => {
 
   res.send({
     success: "Address is added",
+    defaultAddress: user.defaultAddress,
+    addressess: user.addressess,
+  });
+});
+
+router.patch("/userAddress/:addressId", auth, async (req, res) => {
+  const { error } = validateUserAddress(req.body);
+  if (error) return res.status(400).send({ error: error.details[0].message });
+
+  let user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+  let address = await user.addressess.id(req.params.addressId);
+  if (!address) return res.status(400).send({ error: "Address not found" });
+
+  address.set(
+    _.pick(req.body, [
+      "address",
+      "area",
+      "city",
+      "name",
+      "phone",
+      "region",
+      "office",
+    ])
+  );
+
+  if (req.body.defaultAddress) user.defaultAddress = address._id;
+  await user.save();
+
+  res.send({
+    success: "Address is updated",
+    defaultAddress: user.defaultAddress,
+    addressess: user.addressess,
+  });
+});
+
+router.delete("/userAddress/:addressId", auth, async (req, res) => {
+  let user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+  let address = await user.addressess.id(req.params.addressId);
+  if (!address) return res.status(400).send({ error: "Address not found" });
+
+  address.remove();
+
+  await user.save();
+
+  res.send({
+    success: "Address is deleted",
+    defaultAddress: user.defaultAddress,
+    addressess: user.addressess,
   });
 });
 
@@ -173,8 +225,8 @@ router.post("/google", async (req, res) => {
 
 function validateGoogleUser(user) {
   const schema = Joi.object({
-    email: Joi.string().min(5).max(255).required().email(),
-    name: Joi.string().min(5).max(255).required(),
+    email: Joi.string().min(1).max(255).required().email(),
+    name: Joi.string().min(1).max(255).required(),
     googleId: Joi.string().min(5).max(255).required(),
     accessToken: Joi.string().min(5).max(255).required(),
   });
@@ -184,8 +236,8 @@ function validateGoogleUser(user) {
 
 function validateUserUpdate(user) {
   const schema = Joi.object({
-    name: Joi.string().min(5).max(255),
-    phone: Joi.string().min(5).max(255),
+    name: Joi.string().min(1).max(255),
+    phone: Joi.string().min(1).max(255),
     gender: Joi.string().min(1).max(255),
     birthday: Joi.string().min(1).max(30),
   });

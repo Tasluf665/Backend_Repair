@@ -7,37 +7,37 @@ const userAddressSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   area: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   city: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   name: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   phone: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   region: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   office: {
@@ -53,13 +53,13 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
   },
   email: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 1,
     maxlength: 255,
     unique: true,
   },
@@ -85,7 +85,7 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    minlength: 5,
+    minlength: 1,
     maxlength: 20,
   },
   gender: {
@@ -115,8 +115,8 @@ const User = mongoose.model("User", userSchema);
 
 function validateUser(user) {
   const schema = Joi.object({
-    name: Joi.string().min(5).max(255).required(),
-    email: Joi.string().min(5).max(255).required().email(),
+    name: Joi.string().min(1).max(255).required(),
+    email: Joi.string().min(1).max(255).required().email(),
     password: Joi.string().min(5).max(255),
     googleId: Joi.string().min(5).max(30),
   });
