@@ -54,20 +54,20 @@ GET http://localhost:3001/api/auth/google
 
 ###
 
-DELETE  http://localhost:3001/api/users/userAddress/62e26ba4ca526309ecca69ff
+POST  http://localhost:3001/api/users/userAddress/
 x-auth-token: {{token}}
 Content-Type: application/json
 
-# {
-#     "address": "Road 2/3",
-#     "area": "Khulna",
-#     "city": "Barishal",
-#     "name": "R184640",
-#     "phone": "Barishal",
-#     "region": "Barishal",
-#     "office": true,
-#     "defaultAddress": false
-# }
+{
+    "address": "Road 2/3",
+    "area": "Khulna",
+    "city": "Barishal",
+    "name": "R184640",
+    "phone": "Barishal",
+    "region": "Barishal",
+    "office": true,
+    "defaultAddress": false
+}
 
 
 ###
