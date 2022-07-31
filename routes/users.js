@@ -8,6 +8,7 @@ const Joi = require("joi");
 const axios = require("axios");
 
 const { User, validateUser, UserAddress } = require("../models/user");
+const { Order } = require("../models/order");
 const auth = require("../middleware/auth");
 const asyncMiddleware = require("../middleware/async");
 const { sendVerificationEmail } = require("../utils/SendEmail");
@@ -22,10 +23,35 @@ router.get(
       isAdmin: 0,
       verified: 0,
       googleId: 0,
+      orders: 0,
     });
     res.send(user);
   })
 );
+
+router.get("/orders", auth, async (req, res) => {
+  let user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+  let orders = await Order.find({
+    _id: { $in: user.orders },
+  });
+
+  res.send({ success: "Order fetched", orders });
+});
+
+router.get("/orders/:orderId", auth, async (req, res) => {
+  let user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+  let isValideOrderId = user.orders.includes(req.params.orderId);
+  if (!isValideOrderId)
+    return res.status(400).send({ error: "Invalide Order Id" });
+
+  let order = await Order.findById(req.params.orderId);
+
+  res.send({ success: "Order fetched", order });
+});
 
 router.post(
   "/userAddress",

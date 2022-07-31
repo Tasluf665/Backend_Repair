@@ -22,6 +22,7 @@ router.post(
         "name",
         "phone",
         "address",
+        "arrivalDate",
         "arrivalTime",
         "category",
         "categoryType",
@@ -43,7 +44,10 @@ router.post(
     await order.save();
     await user.save();
 
-    res.send(order);
+    res.send({
+      success: "Order is successfully added",
+      order,
+    });
   })
 );
 

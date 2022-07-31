@@ -80,11 +80,13 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
-  arrivalTime: {
-    type: String,
+  arrivalDate: {
+    type: Date,
     required: true,
-    minlength: 1,
-    maxlength: 50,
+  },
+  arrivalTime: {
+    type: Date,
+    required: true,
   },
   category: {
     type: String,
@@ -133,8 +135,9 @@ const orderSchema = new mongoose.Schema({
     type: [statusSchema],
     required: true,
   },
-  status: {
+  payment: {
     type: [paymentSchema],
+    required: false,
   },
 });
 const Order = mongoose.model("Order", orderSchema);
@@ -144,7 +147,8 @@ function validateOrder(order) {
     name: Joi.string().min(1).max(50).required(),
     phone: Joi.string().min(1).max(15).required(),
     address: Joi.string().min(1).max(255).required(),
-    arrivalTime: Joi.string().min(1).max(50).required(),
+    arrivalDate: Joi.date().required(),
+    arrivalTime: Joi.date().required(),
     category: Joi.string().min(1).max(50).required(),
     categoryType: Joi.string().min(1).max(50).required(),
     product: Joi.string().min(1).max(50).required(),

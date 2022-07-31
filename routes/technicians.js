@@ -3,6 +3,7 @@ const router = express.Router();
 const { Technician, validateTechnician } = require("../models/technician");
 const { Agent } = require("../models/agent");
 const asyncMiddleware = require("../middleware/async");
+const auth = require("../middleware/auth");
 
 router.get(
   "/",
@@ -116,6 +117,7 @@ router.delete(
 
 router.get(
   "/:id",
+  auth,
   asyncMiddleware(async (req, res) => {
     const technician = await Technician.findById(req.params.id);
 
@@ -124,7 +126,10 @@ router.get(
         .status(404)
         .send("The technician with the given ID was not found");
 
-    res.send(technician);
+    res.send({
+      success: "Technicien fetched",
+      technician,
+    });
   })
 );
 

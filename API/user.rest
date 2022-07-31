@@ -6,6 +6,16 @@ GET http://localhost:3001/api/users/me
 x-auth-token: {{token}}
 
 ###
+
+GET http://localhost:3001/api/users/orders
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/users/orders/62e5e6eb28a2386de0c602bd
+x-auth-token: {{token}}
+
+###
 PATCH http://localhost:3001/api/users/update
 Content-Type: application/json
 

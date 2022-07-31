@@ -5,18 +5,19 @@ x-auth-token: {{token}}
 Content-Type: application/json
 
 {
-    "name": "Rhyme",
-    "phone": "01944501581",
     "address": "Road 2/3, Gazaria Char Decree, Munshiganj - Gajaria, Dhaka",
-    "arrivalTime": "29-5-2022,  18.52",
+    "arrivalDate": "7/31/2022, 1:06:35 PM",
+    "arrivalTime": "7/31/2022, 1:06:35 PM",
     "category": "Repairing",
     "categoryType": "fridge",
-    "product": "Samsung",
-    "type": "LG",
-    "problem": "Water Dropping",
+    "name": "Rhyme",
     "note": "Urgent",
+    "phone": "01944501581",
+    "problem": "Water Dropping",
+    "product": "Samsung",
     "statusDetails": "Your order is pending",
     "statusState": "Pending"
+    "type": "LG",
 }
 
 ###

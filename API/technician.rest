@@ -7,6 +7,11 @@ x-auth-token: {{token}}
 
 ###
 
+GET http://localhost:3001/api/technicians/62da10613fa5b83ffeef747b
+x-auth-token: {{token}}
+
+###
+
 POST http://localhost:3001/api/technicians
 x-auth-token: {{token}}
 Content-Type: application/json
