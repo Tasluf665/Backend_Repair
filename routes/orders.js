@@ -1,125 +1,160 @@
 const express = require("express");
 const router = express.Router();
-const { Technician, validateTechnician } = require("../models/technician");
-const { Agent } = require("../models/agent");
+const { Order, Status, validateOrder } = require("../models/order");
+const { User } = require("../models/user");
 const asyncMiddleware = require("../middleware/async");
-
-router.get(
-  "/",
-  asyncMiddleware(async (req, res) => {
-    const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
-    const pageSize = req.query.pageSize ? req.query.pageSize : 10;
-    const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
-
-    const count = await Technician.find({ name: search }).count();
-
-    let technicians = await Technician.find({ name: search })
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .sort("name")
-      .select("-__v");
-
-    res.send({ data: technicians, count });
-  })
-);
+const auth = require("../middleware/auth");
+const _ = require("lodash");
+const Joi = require("joi");
 
 router.post(
   "/",
+  auth,
   asyncMiddleware(async (req, res) => {
-    const { error } = validateTechnician(req.body);
+    const { error } = validateOrder(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const agent = await Agent.findById(req.body.agentId);
-    if (!agent) return res.status(400).send("Invalide agent");
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
 
-    const technician = new Technician({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      whatsappNumber: req.body.whatsappNumber,
-      region: req.body.region,
-      city: req.body.city,
-      area: req.body.area,
-      location: req.body.location,
-      agent: {
-        _id: agent._id,
-        name: agent.name,
-        phone: agent.phone,
-        region: agent.region,
-        city: agent.city,
-      },
-    });
-
-    await technician.save();
-    res.send(technician);
-  })
-);
-
-router.put(
-  "/:id",
-  asyncMiddleware(async (req, res) => {
-    const { error } = validateTechnician(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const agent = await Agent.findById(req.body.agentId);
-    if (!agent) return res.status(400).send("Invalide agent");
-
-    const technician = await Technician.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        whatsappNumber: req.body.whatsappNumber,
-        region: req.body.region,
-        city: req.body.city,
-        area: req.body.area,
-        location: req.body.location,
-        agent: {
-          _id: agent._id,
-          name: agent.name,
-          phone: agent.phone,
-          region: agent.region,
-          city: agent.city,
-        },
-      },
-      { new: true }
+    const order = new Order(
+      _.pick(req.body, [
+        "name",
+        "phone",
+        "address",
+        "arrivalTime",
+        "category",
+        "categoryType",
+        "product",
+        "type",
+        "problem",
+        "note",
+      ])
     );
 
-    if (!technician)
-      return res
-        .status(404)
-        .send("The technician with the given ID was not found");
+    const status = new Status({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+    });
 
-    res.send(technician);
+    order.status.push(status);
+    user.orders.push(order._id);
+
+    await order.save();
+    await user.save();
+
+    res.send(order);
   })
 );
 
-router.delete(
-  "/:id",
+router.patch(
+  "/accept/:orderId",
+  auth,
   asyncMiddleware(async (req, res) => {
-    const technician = await Technician.findByIdAndRemove(req.params.id);
-    if (!technician)
-      return res
-        .status(404)
-        .send("The technician with the given ID was not found");
+    const { error } = validateOrderAccept(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-    res.send(technician);
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    let order = await Order.findById(req.params.orderId);
+    if (!order) return res.status(400).send({ error: "Invalide Order ID" });
+
+    const status = new Status({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+    });
+
+    order.problem = req.body.problem ? req.body.problem : order.problem;
+    order.note = req.body.note ? req.body.note : order.note;
+    order.status.push(status);
+
+    await order.save();
+    res.send(order);
   })
 );
 
-router.get(
-  "/:id",
+router.patch(
+  "/assigned/:orderId",
+  auth,
   asyncMiddleware(async (req, res) => {
-    const technician = await Technician.findById(req.params.id);
+    const { error } = validateOrderAssigned(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-    if (!technician)
-      return res
-        .status(404)
-        .send("The technician with the given ID was not found");
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
 
-    res.send(technician);
+    let order = await Order.findById(req.params.orderId);
+    if (!order) return res.status(400).send({ error: "Invalide Order ID" });
+
+    const status = new Status({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+    });
+
+    order.technicianId = req.body.technicianId;
+    order.status.push(status);
+
+    await order.save();
+    res.send(order);
   })
 );
+
+router.patch(
+  "/repaired/:orderId",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const { error } = validateOrderRepaired(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    let order = await Order.findById(req.params.orderId);
+    if (!order) return res.status(400).send({ error: "Invalide Order ID" });
+
+    const status = new Status({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+    });
+
+    order.amount = req.body.amount;
+    order.status.push(status);
+
+    await order.save();
+    res.send(order);
+  })
+);
+
+function validateOrderAccept(order) {
+  const schema = Joi.object({
+    problem: Joi.string().min(1).max(1024),
+    note: Joi.string().min(1).max(255),
+    statusDetails: Joi.string().min(1).max(255).required(),
+    statusState: Joi.string().min(1).max(50).required(),
+  });
+
+  return schema.validate(order);
+}
+
+function validateOrderAssigned(order) {
+  const schema = Joi.object({
+    technicianId: Joi.objectId().required(),
+    statusDetails: Joi.string().min(1).max(255).required(),
+    statusState: Joi.string().min(1).max(50).required(),
+  });
+
+  return schema.validate(order);
+}
+
+function validateOrderRepaired(order) {
+  const schema = Joi.object({
+    amount: Joi.number().min(0).required(),
+    statusDetails: Joi.string().min(1).max(255).required(),
+    statusState: Joi.string().min(1).max(50).required(),
+  });
+
+  return schema.validate(order);
+}
 
 module.exports = router;

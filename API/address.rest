@@ -1,0 +1,21 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+
+###
+
+POST http://localhost:3001/api/address
+x-auth-token: {{token}}
+Content-Type: application/json
+
+
+{
+    "id": "R3921298",
+    "name": "Barishal",
+    "nameLocal": "Barishal",
+    "parentId": "R184640",
+    "displayName": "Barishal"
+}
+
+###
+
+GET http://localhost:3001/api/address?id=R3824588
+x-auth-token: {{token}}

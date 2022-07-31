@@ -1,0 +1,56 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+
+POST http://localhost:3001/api/orders
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Rhyme",
+    "phone": "01944501581",
+    "address": "Road 2/3, Gazaria Char Decree, Munshiganj - Gajaria, Dhaka",
+    "arrivalTime": "29-5-2022,  18.52",
+    "category": "Repairing",
+    "categoryType": "fridge",
+    "product": "Samsung",
+    "type": "LG",
+    "problem": "Water Dropping",
+    "note": "Urgent",
+    "statusDetails": "Your order is pending",
+    "statusState": "Pending"
+}
+
+###
+
+PATCH http://localhost:3001/api/orders/accept/62e5e6eb28a2386de0c602bd
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "note": "Urgent2",
+    "statusDetails": "Your order is Accepted",
+    "statusState": "Accepted"
+}
+
+###
+
+PATCH http://localhost:3001/api/orders/assigned/62e5e6eb28a2386de0c602bd
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "technicianId": "62da10613fa5b83ffeef747b",
+    "statusDetails": "Technician Assigned has been assigned to your order",
+    "statusState": "Technician Assigned"
+}
+
+###
+
+PATCH http://localhost:3001/api/orders/repaired/62e5e6eb28a2386de0c602bd
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "amount": 10,
+    "statusDetails": "Your product has been repaired. Please pay the bills",
+    "statusState": "Product Repaired"
+}
