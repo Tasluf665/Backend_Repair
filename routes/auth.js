@@ -12,53 +12,66 @@ const {
   sendResetPasswordEmail,
 } = require("../utils/SendEmail");
 
-router.post("/forgot-password", async (req, res) => {
-  const { error } = validateForgotPassword(req.body);
-  if (error) return res.status(400).send({ error: error.details[0].message });
+router.post(
+  "/forgot-password",
+  asyncMiddleware(async (req, res) => {
+    const { error } = validateForgotPassword(req.body);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
-  let user = await User.findOne({ email: req.body.email });
-  if (!user)
-    return res
-      .status(400)
-      .send({ error: "User not found with this given email" });
+    let user = await User.findOne({ email: req.body.email });
+    if (!user)
+      return res
+        .status(400)
+        .send({ error: "User not found with this given email" });
 
-  sendResetPasswordEmail(user.email, user._id);
-  res.send({ success: "Check your email to reset your password" });
-});
+    sendResetPasswordEmail(user.email, user._id);
+    res.send({ success: "Check your email to reset your password" });
+  })
+);
 
-router.get("/reset-password/:token", async (req, res) => {
-  const { token } = req.params;
+router.get(
+  "/reset-password/:token",
+  asyncMiddleware(async (req, res) => {
+    const { token } = req.params;
 
-  if (!token)
-    return res.status(401).send({ error: "Access denied. No token provided" });
-  try {
-    jwt.verify(token, config.get("jwtPrivateKey"));
-    res.render("RestPasswordForm", { token: token });
-  } catch (ex) {
-    res.status(400).send({ error: "Invalide token" });
-  }
-});
+    if (!token)
+      return res
+        .status(401)
+        .send({ error: "Access denied. No token provided" });
+    try {
+      jwt.verify(token, config.get("jwtPrivateKey"));
+      res.render("RestPasswordForm", { token: token });
+    } catch (ex) {
+      res.status(400).send({ error: "Invalide token" });
+    }
+  })
+);
 
-router.post("/reset-password/:token", async (req, res) => {
-  const { error } = validateResetPassword(req.body);
-  if (error) return res.status(400).send({ error: error.details[0].message });
+router.post(
+  "/reset-password/:token",
+  asyncMiddleware(async (req, res) => {
+    const { error } = validateResetPassword(req.body);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
-  const { token } = req.params;
-  if (!token)
-    return res.status(401).send({ error: "Access denied. No token provided" });
-  try {
-    const decoded = jwt.verify(token, config.get("jwtPrivateKey"));
+    const { token } = req.params;
+    if (!token)
+      return res
+        .status(401)
+        .send({ error: "Access denied. No token provided" });
+    try {
+      const decoded = jwt.verify(token, config.get("jwtPrivateKey"));
 
-    const user = await User.findById(decoded._id);
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(req.body.password, salt);
-    user.verified = true;
-    await user.save();
-    res.render("PasswordResetVerification");
-  } catch (ex) {
-    res.status(400).send({ error: "Invalide token" });
-  }
-});
+      const user = await User.findById(decoded._id);
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.password, salt);
+      user.verified = true;
+      await user.save();
+      res.render("PasswordResetVerification");
+    } catch (ex) {
+      res.status(400).send({ error: "Invalide token" });
+    }
+  })
+);
 
 router.post(
   "/",

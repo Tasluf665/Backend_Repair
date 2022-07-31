@@ -1,6 +1,61 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
+const statusSchema = new mongoose.Schema({
+  statusDetails: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+  statusState: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 50,
+  },
+  time: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+});
+
+const Status = mongoose.model("Status", statusSchema);
+
+const paymentSchema = new mongoose.Schema({
+  Invoice_Number: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+  phone: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 50,
+  },
+  time: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  amount: {
+    type: Number,
+    min: 0,
+    required: true,
+  },
+  Transaction_ID: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+});
+
+const Payment = mongoose.model("Payment", paymentSchema);
+
 const orderSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,6 +65,7 @@ const orderSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
+    required: true,
     minlength: 1,
     maxlength: 15,
   },
@@ -25,8 +81,10 @@ const orderSchema = new mongoose.Schema({
     default: Date.now,
   },
   arrivalTime: {
-    type: Date,
+    type: String,
     required: true,
+    minlength: 1,
+    maxlength: 50,
   },
   category: {
     type: String,
@@ -63,55 +121,44 @@ const orderSchema = new mongoose.Schema({
     minlength: 1,
     maxlength: 255,
   },
-
-  agent: {
-    type: new mongoose.Schema({
-      name: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 50,
-      },
-      phone: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength: 15,
-      },
-      region: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength: 255,
-      },
-      city: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength: 255,
-      },
-    }),
-
-    require: true,
+  technicianId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Technician",
+  },
+  amount: {
+    type: Number,
+    min: 0,
+  },
+  status: {
+    type: [statusSchema],
+    required: true,
+  },
+  status: {
+    type: [paymentSchema],
   },
 });
-const Technician = mongoose.model("Technician", technicianSchema);
+const Order = mongoose.model("Order", orderSchema);
 
-function validateTechnician(technician) {
+function validateOrder(order) {
   const schema = Joi.object({
     name: Joi.string().min(1).max(50).required(),
-    email: Joi.string().min(1).max(255).email(),
     phone: Joi.string().min(1).max(15).required(),
-    whatsappNumber: Joi.string().min(1).max(15),
-    region: Joi.string().min(1).max(255).required(),
-    city: Joi.string().min(1).max(255).required(),
-    area: Joi.string().min(1).max(255).required(),
-    location: Joi.string().min(1).max(255).required(),
-    agentId: Joi.objectId().required(),
+    address: Joi.string().min(1).max(255).required(),
+    arrivalTime: Joi.string().min(1).max(50).required(),
+    category: Joi.string().min(1).max(50).required(),
+    categoryType: Joi.string().min(1).max(50).required(),
+    product: Joi.string().min(1).max(50).required(),
+    type: Joi.string().min(1).max(50).required(),
+    problem: Joi.string().min(1).max(1024).required(),
+    note: Joi.string().min(1).max(255).required(),
+    statusDetails: Joi.string().min(1).max(255).required(),
+    statusState: Joi.string().min(1).max(50).required(),
   });
 
-  return schema.validate(technician);
+  return schema.validate(order);
 }
 
-exports.Technician = Technician;
-exports.validateTechnician = validateTechnician;
+exports.Order = Order;
+exports.Status = Status;
+exports.Payment = Payment;
+exports.validateOrder = validateOrder;

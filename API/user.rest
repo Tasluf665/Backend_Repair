@@ -1,0 +1,38 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+
+###
+
+GET http://localhost:3001/api/users/me
+x-auth-token: {{token}}
+
+###
+PATCH http://localhost:3001/api/users/update
+Content-Type: application/json
+
+###
+
+POST http://localhost:3001/api/users/
+Content-Type: application/json
+
+{
+    "name": "Tasluf Morhshed",
+    "email": "tasluf15-12089@diu.edu.bd",
+    "password": "12345"
+}
+
+###
+
+DELETE  http://localhost:3001/api/users/userAddress/62e26ba4ca526309ecca69ff
+x-auth-token: {{token}}
+Content-Type: application/json
+
+# {
+#     "address": "Road 2/3",
+#     "area": "Khulna",
+#     "city": "Barishal",
+#     "name": "R184640",
+#     "phone": "Barishal",
+#     "region": "Barishal",
+#     "office": true,
+#     "defaultAddress": false
+# }

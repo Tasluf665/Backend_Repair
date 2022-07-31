@@ -101,6 +101,10 @@ const userSchema = new mongoose.Schema({
   defaultAddress: {
     type: mongoose.Schema.Types.ObjectId,
   },
+  orders: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Order",
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {
