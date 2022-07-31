@@ -7,6 +7,48 @@ const auth = require("../middleware/auth");
 const _ = require("lodash");
 const Joi = require("joi");
 
+router.get("/", async (req, res) => {
+  const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
+  const pageSize = req.query.pageSize ? req.query.pageSize : 10;
+  const search = req.query.phone ? new RegExp(req.query.phone, "i") : /.*/;
+
+  const count = await Order.find({ phone: search }).count();
+
+  let orders = await Order.find({ phone: search }).exec(function (
+    err,
+    instances
+  ) {
+    const allPendingOrders = instances.filter(
+      (item) => item.status[item.status.length - 1].statusState === "Pending"
+    );
+
+    const otherOrders = instances.filter(
+      (item) => item.status[item.status.length - 1].statusState !== "Pending"
+    );
+    let sortedOrders = [...allPendingOrders, ...otherOrders];
+
+    sortedOrders = sortedOrders.filter((item, index) => {
+      if (index > (pageNumber - 1) * pageSize - 1) {
+        return true;
+      }
+    });
+
+    sortedOrders = sortedOrders.filter((item, index) => {
+      if (index < pageSize) {
+        return true;
+      }
+    });
+
+    sortedOrders = sortedOrders.map((item, index) => {
+      item._doc.id = (pageNumber - 1) * pageSize + index + 1;
+
+      return item._doc;
+    });
+
+    res.status(200).send({ data: sortedOrders, count });
+  });
+});
+
 router.post(
   "/",
   auth,
