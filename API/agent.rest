@@ -2,3 +2,8 @@
 
 GET http://localhost:3001/api/agents?pageNumber=2&pageSize=10
 x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/agents/allAgents
+x-auth-token: {{token}}

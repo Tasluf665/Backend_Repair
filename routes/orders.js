@@ -10,14 +10,11 @@ const Joi = require("joi");
 router.get("/", async (req, res) => {
   const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
   const pageSize = req.query.pageSize ? req.query.pageSize : 10;
-  const search = req.query.phone ? new RegExp(req.query.phone, "i") : /.*/;
+  const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
 
   const count = await Order.find({ phone: search }).count();
 
-  let orders = await Order.find({ phone: search }).exec(function (
-    err,
-    instances
-  ) {
+  await Order.find({ phone: search }).exec(function (err, instances) {
     const allPendingOrders = instances.filter(
       (item) => item.status[item.status.length - 1].statusState === "Pending"
     );
@@ -113,6 +110,7 @@ router.patch(
 
     order.problem = req.body.problem ? req.body.problem : order.problem;
     order.note = req.body.note ? req.body.note : order.note;
+
     order.status.push(status);
 
     await order.save();
@@ -169,6 +167,24 @@ router.patch(
 
     await order.save();
     res.send(order);
+  })
+);
+
+router.get(
+  "/:id",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order)
+      return res
+        .status(404)
+        .send({ error: "The order with the given ID was not found" });
+
+    res.send({
+      success: "Order fetched",
+      order,
+    });
   })
 );
 

@@ -6,6 +6,15 @@ const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
 
 router.get(
+  "/allTechnicians",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    let technicians = await Technician.find().select("-__v");
+    res.send({ data: technicians });
+  })
+);
+
+router.get(
   "/",
   asyncMiddleware(async (req, res) => {
     const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;

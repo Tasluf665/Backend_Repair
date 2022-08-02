@@ -5,6 +5,15 @@ const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
 
 router.get(
+  "/allAgents",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    let agents = await Agent.find().select("-__v");
+    res.send({ data: agents });
+  })
+);
+
+router.get(
   "/",
   auth,
   asyncMiddleware(async (req, res) => {

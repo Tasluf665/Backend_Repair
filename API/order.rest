@@ -6,6 +6,11 @@ x-auth-token: {{token}}
 
 ###
 
+GET http://localhost:3001/api/orders/62e630117934c95149cced88
+x-auth-token: {{token}}
+
+###
+
 POST http://localhost:3001/api/orders
 x-auth-token: {{token}}
 Content-Type: application/json
@@ -28,7 +33,7 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:3001/api/orders/accept/62e5e6eb28a2386de0c602bd
+PATCH http://localhost:3001/api/orders/accept/62e630117934c95149cced88
 x-auth-token: {{token}}
 Content-Type: application/json
 
@@ -40,19 +45,19 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:3001/api/orders/assigned/62e5e6eb28a2386de0c602bd
+PATCH http://localhost:3001/api/orders/assigned/62e630117934c95149cced88
 x-auth-token: {{token}}
 Content-Type: application/json
 
 {
-    "technicianId": "62da10613fa5b83ffeef747b",
+    "technicianId": "62e87f8de5f8d4bf82a903f8",
     "statusDetails": "Technician Assigned has been assigned to your order",
     "statusState": "Technician Assigned"
 }
 
 ###
 
-PATCH http://localhost:3001/api/orders/repaired/62e5e6eb28a2386de0c602bd
+PATCH http://localhost:3001/api/orders/repaired/62e630117934c95149cced88
 x-auth-token: {{token}}
 Content-Type: application/json
 
