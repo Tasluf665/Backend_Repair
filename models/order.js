@@ -24,33 +24,39 @@ const statusSchema = new mongoose.Schema({
 const Status = mongoose.model("Status", statusSchema);
 
 const paymentSchema = new mongoose.Schema({
-  Invoice_Number: {
+  tran_id: {
     type: String,
     required: true,
     minlength: 1,
     maxlength: 255,
-  },
-  phone: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 50,
-  },
-  time: {
-    type: Date,
-    required: true,
-    default: Date.now,
   },
   amount: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
-  Transaction_ID: {
     type: String,
     required: true,
     minlength: 1,
     maxlength: 255,
+  },
+  card_type: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+  bank_tran_id: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+  card_issuer: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+  tran_date: {
+    type: Date,
+    required: true,
   },
 });
 

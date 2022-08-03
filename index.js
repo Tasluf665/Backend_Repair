@@ -14,6 +14,7 @@ const technicians = require("./routes/technicians");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 const orders = require("./routes/orders");
+const payments = require("./routes/payments");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -47,6 +48,7 @@ app.use("/api/technicians", technicians);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
 app.use("/api/orders", orders);
+app.use("/api/payments", payments);
 app.use(error);
 
 const port = process.env.PORT || 3001;
