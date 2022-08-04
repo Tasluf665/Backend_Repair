@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const { Order, Payment, Status } = require("../models/order");
+const { Notification, User } = require("../models/user");
 const fetch = require("node-fetch");
 
 const { initPayment } = require("../controller/paymentController");
@@ -20,6 +21,9 @@ router.post("/paymentSuccess", async (req, res) => {
   let order = await Order.findById(result.value_a);
   if (!order) return res.status(400).send({ error: "Invalide Order ID" });
 
+  let user = await User.findById(result.value_b);
+  if (!user) return res.status(400).send({ error: "Invalide User ID" });
+
   const payment = new Payment({
     tran_id: result.tran_id,
     amount: result.amount,
@@ -35,7 +39,28 @@ router.post("/paymentSuccess", async (req, res) => {
     statusState: "Payment Complete",
   });
   order.status.push(status);
+
+  const notification = new Notification({
+    statusDetails: "Your payment has been complete",
+    statusState: "Payment Complete",
+    orderId: order._id,
+  });
+  user.notifications.push(notification);
+
   await order.save();
+  await user.save();
+
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      to: user.expoPushToken,
+      title: req.body.statusState,
+      body: req.body.statusDetails,
+    }),
+  });
 
   res.render("PaymentSuccess");
 });

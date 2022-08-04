@@ -49,6 +49,32 @@ const userAddressSchema = new mongoose.Schema({
 
 const UserAddress = mongoose.model("UserAddress", userAddressSchema);
 
+const notificationSchema = new mongoose.Schema({
+  statusDetails: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 255,
+  },
+  orderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Order",
+  },
+  statusState: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 50,
+  },
+  time: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+});
+
+const Notification = mongoose.model("Notification", notificationSchema);
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -59,6 +85,12 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    minlength: 1,
+    maxlength: 255,
+    unique: true,
+  },
+  expoPushToken: {
+    type: String,
     minlength: 1,
     maxlength: 255,
     unique: true,
@@ -98,6 +130,7 @@ const userSchema = new mongoose.Schema({
     maxlength: 30,
   },
   addressess: [userAddressSchema],
+  notifications: [notificationSchema],
   defaultAddress: {
     type: mongoose.Schema.Types.ObjectId,
   },
@@ -120,6 +153,7 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(1).max(255).required(),
+    expoPushToken: Joi.string().min(1).max(255),
     email: Joi.string().min(1).max(255).required().email(),
     password: Joi.string().min(5).max(255),
     googleId: Joi.string().min(5).max(30),
@@ -131,3 +165,4 @@ function validateUser(user) {
 exports.User = User;
 exports.validateUser = validateUser;
 exports.UserAddress = UserAddress;
+exports.Notification = Notification;

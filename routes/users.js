@@ -29,6 +29,16 @@ router.get(
   })
 );
 
+router.get("/notifications", auth, async (req, res) => {
+  let user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+  res.send({
+    success: "Notifications fetched",
+    notifications: user.notifications,
+  });
+});
+
 router.get("/orders", auth, async (req, res) => {
   let user = await User.findById(req.user._id);
   if (!user) return res.status(400).send({ error: "Invalide Id" });
@@ -189,7 +199,9 @@ router.post(
     let user = await User.findOne({ email: req.body.email });
     if (user) return res.status(400).send({ error: "User already registered" });
 
-    user = new User(_.pick(req.body, ["name", "email", "password"]));
+    user = new User(
+      _.pick(req.body, ["name", "email", "password", "expoPushToken"])
+    );
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 
@@ -248,7 +260,9 @@ router.post(
     let user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      user = new User(_.pick(req.body, ["name", "email", "googleId"]));
+      user = new User(
+        _.pick(req.body, ["name", "email", "googleId", "expoPushToken"])
+      );
       user.verified = true;
       await user.save();
     }
@@ -272,6 +286,7 @@ function validateGoogleUser(user) {
   const schema = Joi.object({
     email: Joi.string().min(1).max(255).required().email(),
     name: Joi.string().min(1).max(255).required(),
+    expoPushToken: Joi.string().min(1).max(255),
     googleId: Joi.string().min(5).max(255).required(),
     accessToken: Joi.string().min(5).max(255).required(),
   });

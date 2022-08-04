@@ -53,7 +53,7 @@ module.exports.initPayment = async (req, res) => {
     ship_postcode: 1000,
     ship_country: "Bangladesh",
     value_a: req.params.orderId,
-    value_b: "ref002_B",
+    value_b: user._id.toString(),
     value_c: "ref003_C",
     value_d: "ref004_D",
   };

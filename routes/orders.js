@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { Order, Status, validateOrder } = require("../models/order");
-const { User } = require("../models/user");
+const { User, Notification } = require("../models/user");
 const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
 const _ = require("lodash");
 const Joi = require("joi");
+const fetch = require("node-fetch");
 
 router.get("/", async (req, res) => {
   const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
@@ -71,17 +72,37 @@ router.post(
         "note",
       ])
     );
+    order.userId = req.user._id;
 
     const status = new Status({
       statusDetails: req.body.statusDetails,
       statusState: req.body.statusState,
     });
-
     order.status.push(status);
+
+    const notification = new Notification({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+      orderId: order._id,
+    });
+    user.notifications.push(notification);
+
     user.orders.push(order._id);
 
     await order.save();
     await user.save();
+
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: user.expoPushToken,
+        title: req.body.statusState,
+        body: req.body.statusDetails,
+      }),
+    });
 
     res.send({
       success: "Order is successfully added",
@@ -97,23 +118,43 @@ router.patch(
     const { error } = validateOrderAccept(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send({ error: "Invalide Id" });
-
     let order = await Order.findById(req.params.orderId);
     if (!order) return res.status(400).send({ error: "Invalide Order ID" });
+
+    let user = await User.findById(order.userId);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
 
     const status = new Status({
       statusDetails: req.body.statusDetails,
       statusState: req.body.statusState,
     });
+    order.status.push(status);
+
+    const notification = new Notification({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+      orderId: order._id,
+    });
+    user.notifications.push(notification);
 
     order.problem = req.body.problem ? req.body.problem : order.problem;
     order.note = req.body.note ? req.body.note : order.note;
 
-    order.status.push(status);
-
     await order.save();
+    await user.save();
+
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: user.expoPushToken,
+        title: status.statusState,
+        body: status.statusDetails,
+      }),
+    });
+
     res.send(order);
   })
 );
@@ -125,21 +166,41 @@ router.patch(
     const { error } = validateOrderAssigned(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send({ error: "Invalide Id" });
-
     let order = await Order.findById(req.params.orderId);
     if (!order) return res.status(400).send({ error: "Invalide Order ID" });
+
+    let user = await User.findById(order.userId);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
 
     const status = new Status({
       statusDetails: req.body.statusDetails,
       statusState: req.body.statusState,
     });
-
-    order.technicianId = req.body.technicianId;
     order.status.push(status);
 
+    const notification = new Notification({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+      orderId: order._id,
+    });
+    user.notifications.push(notification);
+
+    order.technicianId = req.body.technicianId;
     await order.save();
+    await user.save();
+
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: user.expoPushToken,
+        title: req.body.statusState,
+        body: req.body.statusDetails,
+      }),
+    });
+
     res.send(order);
   })
 );
@@ -151,21 +212,41 @@ router.patch(
     const { error } = validateOrderRepaired(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send({ error: "Invalide Id" });
-
     let order = await Order.findById(req.params.orderId);
     if (!order) return res.status(400).send({ error: "Invalide Order ID" });
+
+    let user = await User.findById(order.userId);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
 
     const status = new Status({
       statusDetails: req.body.statusDetails,
       statusState: req.body.statusState,
     });
-
-    order.amount = req.body.amount;
     order.status.push(status);
 
+    const notification = new Notification({
+      statusDetails: req.body.statusDetails,
+      statusState: req.body.statusState,
+      orderId: order._id,
+    });
+    user.notifications.push(notification);
+
+    order.amount = req.body.amount;
+
     await order.save();
+    await user.save();
+
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: user.expoPushToken,
+        title: req.body.statusState,
+        body: req.body.statusDetails,
+      }),
+    });
     res.send(order);
   })
 );
