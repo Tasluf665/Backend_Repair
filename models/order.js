@@ -106,13 +106,13 @@ const orderSchema = new mongoose.Schema({
     minlength: 1,
     maxlength: 50,
   },
-  product: {
+  brand: {
     type: String,
     required: true,
     minlength: 1,
     maxlength: 50,
   },
-  type: {
+  model: {
     type: String,
     required: true,
     minlength: 1,
@@ -162,8 +162,8 @@ function validateOrder(order) {
     arrivalTime: Joi.date().required(),
     category: Joi.string().min(1).max(50).required(),
     categoryType: Joi.string().min(1).max(50).required(),
-    product: Joi.string().min(1).max(50).required(),
-    type: Joi.string().min(1).max(50).required(),
+    brand: Joi.string().min(1).max(50).required(),
+    model: Joi.string().min(1).max(50).required(),
     problem: Joi.string().min(1).max(1024).required(),
     note: Joi.string().min(1).max(255).required(),
     statusDetails: Joi.string().min(1).max(255).required(),

@@ -66,8 +66,8 @@ router.post(
         "arrivalTime",
         "category",
         "categoryType",
-        "product",
-        "type",
+        "brand",
+        "model",
         "problem",
         "note",
       ])
