@@ -2,11 +2,13 @@ const express = require("express");
 const router = express.Router();
 const { Order, Status, validateOrder } = require("../models/order");
 const { User, Notification } = require("../models/user");
+const { Product, Brand } = require("../models/product");
 const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
 const _ = require("lodash");
 const Joi = require("joi");
 const fetch = require("node-fetch");
+const mongoose = require("mongoose");
 
 router.get("/", async (req, res) => {
   const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
@@ -251,23 +253,32 @@ router.patch(
   })
 );
 
-router.get(
-  "/:id",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const order = await Order.findById(req.params.id);
+router.get("/:id", auth, async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order)
+    return res
+      .status(404)
+      .send({ error: "The order with the given ID was not found" });
 
-    if (!order)
-      return res
-        .status(404)
-        .send({ error: "The order with the given ID was not found" });
+  const product = await Product.findOne({
+    iconName: order.categoryType,
+  });
 
-    res.send({
-      success: "Order fetched",
-      order,
-    });
-  })
-);
+  const brand = product.brands.find(
+    (item) => item._id.toString() === order.brand
+  );
+  order.brand = brand.brandName;
+
+  const model = brand.models.find(
+    (item) => item._id.toString() === order.model
+  );
+  order.model = model.modelName;
+
+  res.send({
+    success: "Order fetched",
+    order,
+  });
+});
 
 function validateOrderAccept(order) {
   const schema = Joi.object({

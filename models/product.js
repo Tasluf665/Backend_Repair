@@ -20,6 +20,8 @@ const brandSchema = new mongoose.Schema({
   models: [modelSchema],
 });
 
+const Brand = mongoose.model("brand", brandSchema);
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -35,6 +37,7 @@ const productSchema = new mongoose.Schema({
   },
   brands: {
     type: [brandSchema],
+    ref: "Brand",
     required: true,
   },
 });
@@ -51,4 +54,5 @@ function validateProduct(product) {
 }
 
 exports.Product = Product;
+exports.Brand = Brand;
 exports.validateProduct = validateProduct;
