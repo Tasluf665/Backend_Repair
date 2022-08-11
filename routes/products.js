@@ -6,6 +6,59 @@ const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
+router.get(
+  "/",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const products = await Product.find().select("-brands -__v");
+    if (!products) return res.status(404).send({ error: "Something failed" });
+
+    res.send({
+      success: "Product is fetched successfully",
+      data: products,
+    });
+  })
+);
+
+router.get(
+  "/brands/:id",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const product = await Product.findById(req.params.id).select("-__v -name");
+    if (!product)
+      return res.status(404).send({ error: "Product not found with given Id" });
+
+    let result = product.brands.map((item) => {
+      let temp = { ...item };
+      delete temp._doc.models;
+      return temp._doc;
+    });
+
+    res.send({
+      success: "Product Brand is fetched successfully",
+      data: result,
+    });
+  })
+);
+
+router.get(
+  "/models/:id/:brandId",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const product = await Product.findById(req.params.id).select("-__v -name");
+    if (!product)
+      return res.status(404).send({ error: "Product not found with given Id" });
+
+    const brand = await product.brands.id(req.params.brandId);
+    if (!brand) return res.status(400).send({ error: "Invalide Brand" });
+
+    res.send({
+      success: "Data fetch successfully",
+      data: brand.models,
+    });
+  })
+);
+
 router.post(
   "/",
   [auth, admin],
@@ -95,59 +148,6 @@ router.patch(
 //     data: brand,
 //   });
 // });
-
-router.get(
-  "/",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const products = await Product.find().select("-brands -__v");
-    if (!products) return res.status(404).send({ error: "Something failed" });
-
-    res.send({
-      success: "Product is fetched successfully",
-      data: products,
-    });
-  })
-);
-
-router.get(
-  "/brands/:id",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const product = await Product.findById(req.params.id).select("-__v -name");
-    if (!product)
-      return res.status(404).send({ error: "Product not found with given Id" });
-
-    let result = product.brands.map((item) => {
-      let temp = { ...item };
-      delete temp._doc.models;
-      return temp._doc;
-    });
-
-    res.send({
-      success: "Product Brand is fetched successfully",
-      data: result,
-    });
-  })
-);
-
-router.get(
-  "/models/:id/:brandId",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const product = await Product.findById(req.params.id).select("-__v -name");
-    if (!product)
-      return res.status(404).send({ error: "Product not found with given Id" });
-
-    const brand = await product.brands.id(req.params.brandId);
-    if (!brand) return res.status(400).send({ error: "Invalide Brand" });
-
-    res.send({
-      success: "Data fetch successfully",
-      data: brand.models,
-    });
-  })
-);
 
 function validateBrand(brand) {
   const schema = Joi.object({

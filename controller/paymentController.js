@@ -30,7 +30,7 @@ module.exports.initPayment = async (req, res) => {
     cancel_url: `${process.env.URL}/api/payments/paymentCancel`,
 
     shipping_method: order.category,
-    product_name: order.product,
+    product_name: order.brand,
     product_category: order.categoryType,
     product_profile: "general",
 

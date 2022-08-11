@@ -8,7 +8,7 @@ const asyncMiddleware = require("../middleware/async");
 
 const { initPayment } = require("../controller/paymentController");
 
-router.get("/:orderId", asyncMiddleware(initPayment));
+router.get("/:orderId", auth, asyncMiddleware(initPayment));
 
 router.post(
   "/paymentSuccess",

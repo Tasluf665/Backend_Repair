@@ -118,6 +118,42 @@ router.post(
   })
 );
 
+router.post(
+  "/newToken",
+  asyncMiddleware(async (req, res) => {
+    const refreshToken = req.header("refresh-token");
+    if (!refreshToken)
+      return res
+        .status(401)
+        .send({ error: "Access denied. No refresh token provided" });
+
+    try {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REPAIR_JWT_REFRESH_TOKEN_PRIVATE_KEY
+      );
+
+      let user = await User.findById(decoded._id);
+      if (!user)
+        return res.status(400).send({ error: "Invalide email or password" });
+
+      const token = user.generateAuthToken();
+      res.send({
+        success: "New Token Generated Successfully",
+        data: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          token: token,
+          refreshToken: refreshToken,
+        },
+      });
+    } catch (ex) {
+      res.status(400).send({ error: "Invalide token" });
+    }
+  })
+);
+
 function validate(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),

@@ -1,7 +1,7 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0ZDQzZjI3NTQ1YjVhZjVlNTUwNzciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYwMjIzMzk4LCJleHAiOjE2NjAyMjM0NTh9.ftUHO8Jyz85JBzqkLHAE4cL0zxdGvF0uWfcJFEKQJqU
 
 
 ###
 
-GET http://localhost:3001/api/payments
+GET http://localhost:3001/api/payments/62f4e7476504589c9758f578
 x-auth-token: {{token}}

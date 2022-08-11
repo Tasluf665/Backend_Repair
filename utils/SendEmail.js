@@ -21,7 +21,7 @@ const sendEmail = async (email, subject, message) => {
 
 const sendVerificationEmail = async (email, _id) => {
   const token = jwt.sign({ _id }, config.get("jwtPrivateKey"), {
-    expiresIn: "20m",
+    expiresIn: process.env.EMAIL_TOKEN_EXPIRATION_TIME,
   });
 
   const subject = "Account Activation Link";
@@ -34,7 +34,7 @@ const sendVerificationEmail = async (email, _id) => {
 
 const sendResetPasswordEmail = async (email, _id) => {
   const token = jwt.sign({ _id }, config.get("jwtPrivateKey"), {
-    expiresIn: "20m",
+    expiresIn: process.env.EMAIL_TOKEN_EXPIRATION_TIME,
   });
 
   const subject = "Account Password Reset Link";

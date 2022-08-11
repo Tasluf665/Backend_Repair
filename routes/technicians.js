@@ -31,7 +31,7 @@ router.get(
 
     res.send({
       success: "Technicien is fetched successfully",
-      technician,
+      data: technician,
     });
   })
 );

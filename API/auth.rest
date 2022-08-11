@@ -1,5 +1,7 @@
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
 
+@refresh_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0ZDQzZjI3NTQ1YjVhZjVlNTUwNzciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYwMjE0MDY4LCJleHAiOjE2NjI4MDYwNjh9.I54oNOULmmfuyjASDisytW3Fnb4ZIVHh5xNK4uHRwV4
+
 ###
 
 POST http://localhost:3001/api/auth/
@@ -9,6 +11,11 @@ Content-Type: application/json
     "email": "tasluf665@gmail.com",
     "password": "Raida2012"
 }
+
+###
+
+POST http://localhost:3001/api/auth/newToken
+refresh-token: {{refresh_token}}
 
 
 ###

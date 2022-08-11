@@ -260,57 +260,54 @@ router.get(
   })
 );
 
-router.post(
-  "/google",
-  asyncMiddleware(async (req, res) => {
-    const { error } = validateGoogleUser(req.body);
-    if (error) return res.status(400).send({ error: error.details[0].message });
+router.post("/google", async (req, res) => {
+  const { error } = validateGoogleUser(req.body);
+  if (error) return res.status(400).send({ error: error.details[0].message });
 
-    const result = await axios.get(
-      `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${req.body.accessToken}`
+  const result = await axios.get(
+    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${req.body.accessToken}`
+  );
+
+  if (result.error)
+    return res.status(401).send({ error: "Unauthorized google auth token" });
+
+  if (result.data.email !== req.body.email)
+    return res.status(401).send({ error: "Unauthorized google auth token" });
+
+  if (
+    result.data.issued_to !== process.env.REACT_NATIVE_APP_GOOGLE_CLIENT_ID &&
+    result.data.issued_to !== process.env.REACT_APP_GOOGLE_CLIENT_ID
+  )
+    return res.status(401).send({ error: "Unauthorized google auth token" });
+
+  let user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    user = new User(
+      _.pick(req.body, ["name", "email", "googleId", "expoPushToken"])
     );
+    user.verified = true;
+    await user.save();
+  }
 
-    if (result.error)
-      return res.status(401).send({ error: "Unauthorized google auth token" });
+  if (!user.googleId) {
+    user.googleId = req.body.googleId;
+    await user.save();
+  }
 
-    if (result.data.email !== req.body.email)
-      return res.status(401).send({ error: "Unauthorized google auth token" });
-
-    if (
-      result.data.issued_to !== process.env.REACT_NATIVE_APP_GOOGLE_CLIENT_ID &&
-      result.data.issued_to !== process.env.REACT_APP_GOOGLE_CLIENT_ID
-    )
-      return res.status(401).send({ error: "Unauthorized google auth token" });
-
-    let user = await User.findOne({ email: req.body.email });
-
-    if (!user) {
-      user = new User(
-        _.pick(req.body, ["name", "email", "googleId", "expoPushToken"])
-      );
-      user.verified = true;
-      await user.save();
-    }
-
-    if (!user.googleId) {
-      user.googleId = req.body.googleId;
-      await user.save();
-    }
-
-    const token = user.generateAuthToken();
-    const refreshToken = user.generateRefreshToken();
-    res.send({
-      success: "Google Login Successfully",
-      data: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        token: token,
-        refreshToken: refreshToken,
-      },
-    });
-  })
-);
+  const token = user.generateAuthToken();
+  const refreshToken = user.generateRefreshToken();
+  res.send({
+    success: "Google Login Successfully",
+    data: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: token,
+      refreshToken: refreshToken,
+    },
+  });
+});
 
 function validateGoogleUser(user) {
   const schema = Joi.object({
