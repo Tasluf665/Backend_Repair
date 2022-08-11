@@ -5,12 +5,32 @@ const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
-router.post(
+router.get(
   "/",
   auth,
   asyncMiddleware(async (req, res) => {
+    if (!req.query.id) req.query.id = "R184640";
+    const address = await Address.find({ parentId: req.query.id })
+      .sort("displayName")
+      .select("-__v");
+    if (!address)
+      return res
+        .status(404)
+        .send({ error: "The address with the given ID was not found" });
+
+    res.send({
+      success: "Address is fetched successfully",
+      data: address,
+    });
+  })
+);
+
+router.post(
+  "/",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
     const { error } = validateAddress(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     const address = new Address({
       id: req.body.id,
@@ -21,7 +41,10 @@ router.post(
     });
 
     await address.save();
-    res.send(address);
+    res.send({
+      success: "Address is added successfully",
+      data: address,
+    });
   })
 );
 
@@ -30,7 +53,7 @@ router.put(
   [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateAddress(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     const address = await Address.findByIdAndUpdate(
       req.params.id,
@@ -47,9 +70,12 @@ router.put(
     if (!address)
       return res
         .status(404)
-        .send("The address with the given ID was not found");
+        .send({ error: "The address with the given ID was not found" });
 
-    res.send(address);
+    res.send({
+      success: "Address is updated successfully",
+      data: address,
+    });
   })
 );
 
@@ -61,26 +87,12 @@ router.delete(
     if (!address)
       return res
         .status(404)
-        .send("The address with the given ID was not found");
+        .send({ error: "The address with the given ID was not found" });
 
-    res.send(address);
-  })
-);
-
-router.get(
-  "/",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    if (!req.query.id) req.query.id = "R184640";
-    const address = await Address.find({ parentId: req.query.id })
-      .sort("displayName")
-      .select("-__v");
-    if (!address)
-      return res
-        .status(404)
-        .send("The address with the given ID was not found");
-
-    res.send(address);
+    res.send({
+      success: "Address is deleted successfully",
+      data: address,
+    });
   })
 );
 

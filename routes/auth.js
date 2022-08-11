@@ -83,6 +83,11 @@ router.post(
     if (!user)
       return res.status(400).send({ error: "Invalide email or password" });
 
+    if (!user.password)
+      return res.status(400).send({
+        error: "This user does not have password. Please login in with google",
+      });
+
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
@@ -99,11 +104,16 @@ router.post(
     }
 
     const token = user.generateAuthToken();
+    const refreshToken = user.generateRefreshToken();
     res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: token,
+      success: "Login Successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: token,
+        refreshToken: refreshToken,
+      },
     });
   })
 );

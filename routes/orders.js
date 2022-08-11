@@ -5,56 +5,95 @@ const { User, Notification } = require("../models/user");
 const { Product, Brand } = require("../models/product");
 const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const _ = require("lodash");
 const Joi = require("joi");
 const fetch = require("node-fetch");
-const mongoose = require("mongoose");
 
-router.get("/", async (req, res) => {
-  const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
-  const pageSize = req.query.pageSize ? req.query.pageSize : 10;
-  const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
+router.get(
+  "/",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
+    const pageSize = req.query.pageSize ? req.query.pageSize : 10;
+    const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
 
-  const count = await Order.find({ phone: search }).count();
+    const count = await Order.find({ phone: search }).count();
 
-  await Order.find({ phone: search }).exec(function (err, instances) {
-    const allPendingOrders = instances.filter(
-      (item) => item.status[item.status.length - 1].statusState === "Pending"
+    await Order.find({ phone: search }).exec(function (err, instances) {
+      const allPendingOrders = instances.filter(
+        (item) => item.status[item.status.length - 1].statusState === "Pending"
+      );
+
+      const otherOrders = instances.filter(
+        (item) => item.status[item.status.length - 1].statusState !== "Pending"
+      );
+      let sortedOrders = [...allPendingOrders, ...otherOrders];
+
+      sortedOrders = sortedOrders.filter((item, index) => {
+        if (index > (pageNumber - 1) * pageSize - 1) {
+          return true;
+        }
+      });
+
+      sortedOrders = sortedOrders.filter((item, index) => {
+        if (index < pageSize) {
+          return true;
+        }
+      });
+
+      sortedOrders = sortedOrders.map((item, index) => {
+        item._doc.id = (pageNumber - 1) * pageSize + index + 1;
+
+        return item._doc;
+      });
+
+      res.status(200).send({
+        success: "Orders is fetched successfully",
+        data: sortedOrders,
+        count,
+      });
+    });
+  })
+);
+
+router.get(
+  "/:id",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (!order)
+      return res
+        .status(404)
+        .send({ error: "The order with the given ID was not found" });
+
+    const product = await Product.findOne({
+      iconName: order.categoryType,
+    });
+
+    const brand = product.brands.find(
+      (item) => item._id.toString() === order.brand
     );
+    order.brand = brand.brandName;
 
-    const otherOrders = instances.filter(
-      (item) => item.status[item.status.length - 1].statusState !== "Pending"
+    const model = brand.models.find(
+      (item) => item._id.toString() === order.model
     );
-    let sortedOrders = [...allPendingOrders, ...otherOrders];
+    order.model = model.modelName;
 
-    sortedOrders = sortedOrders.filter((item, index) => {
-      if (index > (pageNumber - 1) * pageSize - 1) {
-        return true;
-      }
+    res.send({
+      success: "Order is fetched successfully",
+      data: order,
     });
-
-    sortedOrders = sortedOrders.filter((item, index) => {
-      if (index < pageSize) {
-        return true;
-      }
-    });
-
-    sortedOrders = sortedOrders.map((item, index) => {
-      item._doc.id = (pageNumber - 1) * pageSize + index + 1;
-
-      return item._doc;
-    });
-
-    res.status(200).send({ data: sortedOrders, count });
-  });
-});
+  })
+);
 
 router.post(
   "/",
   auth,
   asyncMiddleware(async (req, res) => {
     const { error } = validateOrder(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     let user = await User.findById(req.user._id);
     if (!user) return res.status(400).send({ error: "Invalide Id" });
@@ -108,17 +147,17 @@ router.post(
 
     res.send({
       success: "Order is successfully added",
-      order,
+      data: order,
     });
   })
 );
 
 router.patch(
   "/accept/:orderId",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateOrderAccept(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     let order = await Order.findById(req.params.orderId);
     if (!order) return res.status(400).send({ error: "Invalide Order ID" });
@@ -157,16 +196,19 @@ router.patch(
       }),
     });
 
-    res.send(order);
+    res.send({
+      success: "Order is Accepted",
+      data: order,
+    });
   })
 );
 
 router.patch(
   "/assigned/:orderId",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateOrderAssigned(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     let order = await Order.findById(req.params.orderId);
     if (!order) return res.status(400).send({ error: "Invalide Order ID" });
@@ -203,16 +245,19 @@ router.patch(
       }),
     });
 
-    res.send(order);
+    res.send({
+      success: "Agent and Technicians are assigned to the order",
+      data: order,
+    });
   })
 );
 
 router.patch(
   "/repaired/:orderId",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateOrderRepaired(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     let order = await Order.findById(req.params.orderId);
     if (!order) return res.status(400).send({ error: "Invalide Order ID" });
@@ -249,36 +294,12 @@ router.patch(
         body: req.body.statusDetails,
       }),
     });
-    res.send(order);
+    res.send({
+      success: "Order is Repaired",
+      data: order,
+    });
   })
 );
-
-router.get("/:id", auth, async (req, res) => {
-  const order = await Order.findById(req.params.id);
-  if (!order)
-    return res
-      .status(404)
-      .send({ error: "The order with the given ID was not found" });
-
-  const product = await Product.findOne({
-    iconName: order.categoryType,
-  });
-
-  const brand = product.brands.find(
-    (item) => item._id.toString() === order.brand
-  );
-  order.brand = brand.brandName;
-
-  const model = brand.models.find(
-    (item) => item._id.toString() === order.model
-  );
-  order.model = model.modelName;
-
-  res.send({
-    success: "Order fetched",
-    order,
-  });
-});
 
 function validateOrderAccept(order) {
   const schema = Joi.object({

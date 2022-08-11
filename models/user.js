@@ -93,7 +93,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: 1,
     maxlength: 255,
-    unique: true,
   },
   password: {
     type: String,
@@ -143,9 +142,19 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, isAdmin: this.isAdmin },
-    config.get("jwtPrivateKey")
+    config.get("jwtPrivateKey"),
+    { expiresIn: process.env.JWT_EXPIRATION_TIME }
   );
   return token;
+};
+
+userSchema.methods.generateRefreshToken = function () {
+  const refreshToken = jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    process.env.REPAIR_JWT_REFRESH_TOKEN_PRIVATE_KEY,
+    { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME }
+  );
+  return refreshToken;
 };
 
 const User = mongoose.model("User", userSchema);

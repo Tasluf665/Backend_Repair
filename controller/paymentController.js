@@ -73,7 +73,10 @@ module.exports.initPayment = async (req, res) => {
   const data = await response.json();
 
   if (data.status === "SUCCESS") {
-    return res.send({ GatewayPageURL: data.GatewayPageURL });
+    return res.send({
+      success: "Gateway Page URL is fatched successfully",
+      data: data.GatewayPageURL,
+    });
   } else {
     return res.send("Failed to payment");
   }

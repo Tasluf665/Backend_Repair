@@ -4,18 +4,41 @@ const { Technician, validateTechnician } = require("../models/technician");
 const { Agent } = require("../models/agent");
 const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 router.get(
   "/allTechnicians",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     let technicians = await Technician.find().select("-__v");
-    res.send({ data: technicians });
+    res.send({
+      success: "Technicians is fetched successfully",
+      data: technicians,
+    });
+  })
+);
+
+router.get(
+  "/:id",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const technician = await Technician.findById(req.params.id);
+
+    if (!technician)
+      return res
+        .status(404)
+        .send({ error: "The technician with the given ID was not found" });
+
+    res.send({
+      success: "Technicien is fetched successfully",
+      technician,
+    });
   })
 );
 
 router.get(
   "/",
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1;
     const pageSize = req.query.pageSize ? req.query.pageSize : 10;
@@ -35,18 +58,23 @@ router.get(
       return item._doc;
     });
 
-    res.send({ data: technicians, count });
+    res.send({
+      success: "Technicians is fetched successfully",
+      data: technicians,
+      count,
+    });
   })
 );
 
 router.post(
   "/",
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateTechnician(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     const agent = await Agent.findById(req.body.agentId);
-    if (!agent) return res.status(400).send("Invalide agent");
+    if (!agent) return res.status(400).send({ error: "Invalide agent" });
 
     const technician = new Technician({
       name: req.body.name,
@@ -67,18 +95,22 @@ router.post(
     });
 
     await technician.save();
-    res.send(technician);
+    res.send({
+      success: "Technician is added successfully",
+      data: technician,
+    });
   })
 );
 
 router.put(
   "/:id",
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateTechnician(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ error: error.details[0].message });
 
     const agent = await Agent.findById(req.body.agentId);
-    if (!agent) return res.status(400).send("Invalide agent");
+    if (!agent) return res.status(400).send({ error: "Invalide agent" });
 
     const technician = await Technician.findByIdAndUpdate(
       req.params.id,
@@ -105,39 +137,28 @@ router.put(
     if (!technician)
       return res
         .status(404)
-        .send("The technician with the given ID was not found");
+        .send({ error: "The technician with the given ID was not found" });
 
-    res.send(technician);
+    res.send({
+      success: "Technician is updated successfully",
+      data: technician,
+    });
   })
 );
 
 router.delete(
   "/:id",
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const technician = await Technician.findByIdAndRemove(req.params.id);
     if (!technician)
       return res
         .status(404)
-        .send("The technician with the given ID was not found");
-
-    res.send(technician);
-  })
-);
-
-router.get(
-  "/:id",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const technician = await Technician.findById(req.params.id);
-
-    if (!technician)
-      return res
-        .status(404)
-        .send("The technician with the given ID was not found");
+        .send({ error: "The technician with the given ID was not found" });
 
     res.send({
-      success: "Technicien fetched",
-      technician,
+      success: "Technician is deleted successfully",
+      data: technician,
     });
   })
 );

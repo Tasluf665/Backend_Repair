@@ -13,6 +13,7 @@ const auth = require("../middleware/auth");
 const asyncMiddleware = require("../middleware/async");
 const { sendVerificationEmail } = require("../utils/SendEmail");
 
+//For UserInfo
 router.get(
   "/me",
   auth,
@@ -25,137 +26,9 @@ router.get(
       googleId: 0,
       orders: 0,
     });
-    res.send(user);
-  })
-);
-
-router.get("/notifications", auth, async (req, res) => {
-  let user = await User.findById(req.user._id);
-  if (!user) return res.status(400).send({ error: "Invalide Id" });
-
-  res.send({
-    success: "Notifications fetched",
-    notifications: user.notifications,
-  });
-});
-
-router.get("/orders", auth, async (req, res) => {
-  let user = await User.findById(req.user._id);
-  if (!user) return res.status(400).send({ error: "Invalide Id" });
-
-  let orders = await Order.find({
-    _id: { $in: user.orders },
-  });
-
-  res.send({ success: "Order fetched", orders });
-});
-
-router.get("/orders/:orderId", auth, async (req, res) => {
-  let user = await User.findById(req.user._id);
-  if (!user) return res.status(400).send({ error: "Invalide Id" });
-
-  let isValideOrderId = user.orders.includes(req.params.orderId);
-  if (!isValideOrderId)
-    return res.status(400).send({ error: "Invalide Order Id" });
-
-  let order = await Order.findById(req.params.orderId);
-
-  res.send({ success: "Order fetched", order });
-});
-
-router.post(
-  "/userAddress",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const { error } = validateUserAddress(req.body);
-    if (error) return res.status(400).send({ error: error.details[0].message });
-
-    let user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send({ error: "Invalide Id" });
-
-    const address = new UserAddress(
-      _.pick(req.body, [
-        "address",
-        "area",
-        "city",
-        "name",
-        "phone",
-        "region",
-        "office",
-      ])
-    );
-
-    user.addressess.push(address);
-    if (user.addressess.length === 1) {
-      user.defaultAddress = address._id;
-    }
-
-    if (req.body.defaultAddress) user.defaultAddress = address._id;
-
-    await user.save();
-
     res.send({
-      success: "Address is added",
-      defaultAddress: user.defaultAddress,
-      addressess: user.addressess,
-    });
-  })
-);
-
-router.patch(
-  "/userAddress/:addressId",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const { error } = validateUserAddress(req.body);
-    if (error) return res.status(400).send({ error: error.details[0].message });
-
-    let user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send({ error: "Invalide Id" });
-
-    let address = await user.addressess.id(req.params.addressId);
-    if (!address) return res.status(400).send({ error: "Address not found" });
-
-    address.set(
-      _.pick(req.body, [
-        "address",
-        "area",
-        "city",
-        "name",
-        "phone",
-        "region",
-        "office",
-      ])
-    );
-
-    if (req.body.defaultAddress) user.defaultAddress = address._id;
-    await user.save();
-
-    res.send({
-      success: "Address is updated",
-      defaultAddress: user.defaultAddress,
-      addressess: user.addressess,
-    });
-  })
-);
-
-router.delete(
-  "/userAddress/:addressId",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    let user = await User.findById(req.user._id);
-    if (!user) return res.status(400).send({ error: "Invalide Id" });
-
-    let address = await user.addressess.id(req.params.addressId);
-    if (!address) return res.status(400).send({ error: "Address not found" });
-
-    address.remove();
-
-    await user.save();
-
-    res.send({
-      success: "Address is deleted",
-      defaultAddress: user.defaultAddress,
-      addressess: user.addressess,
+      success: "User Info is fetched Successfully",
+      data: user,
     });
   })
 );
@@ -190,29 +63,182 @@ router.patch(
   })
 );
 
-router.post(
-  "/",
+//-----------------------------------------------------------------------------------------------------
+
+//For Notifications
+router.get(
+  "/notifications",
+  auth,
   asyncMiddleware(async (req, res) => {
-    const { error } = validateUser(req.body);
-    if (error) return res.status(400).send({ error: error.details[0].message });
-
-    let user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).send({ error: "User already registered" });
-
-    user = new User(
-      _.pick(req.body, ["name", "email", "password", "expoPushToken"])
-    );
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-
-    await user.save();
-    sendVerificationEmail(user.email, user._id);
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
 
     res.send({
-      message: "Please check your email to verify your accont",
+      success: "Notifications is fetched successfully",
+      data: user.notifications,
     });
   })
 );
+
+//-----------------------------------------------------------------------------------------------------
+
+//For User Order
+router.get(
+  "/orders",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    let orders = await Order.find({
+      _id: { $in: user.orders },
+    });
+
+    res.send({ success: "Orders is fetched successfully", data: orders });
+  })
+);
+
+router.get(
+  "/orders/:orderId",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    let isValideOrderId = user.orders.includes(req.params.orderId);
+    if (!isValideOrderId)
+      return res.status(400).send({ error: "Invalide Order Id" });
+
+    let order = await Order.findById(req.params.orderId);
+
+    res.send({ success: "Order is fetched successfully", data: order });
+  })
+);
+
+//-----------------------------------------------------------------------------------------------------
+
+//For User Address
+router.post(
+  "/userAddress",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const { error } = validateUserAddress(req.body);
+    if (error) return res.status(400).send({ error: error.details[0].message });
+
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    const address = new UserAddress(
+      _.pick(req.body, [
+        "address",
+        "area",
+        "city",
+        "name",
+        "phone",
+        "region",
+        "office",
+      ])
+    );
+
+    user.addressess.push(address);
+    if (user.addressess.length === 1) {
+      user.defaultAddress = address._id;
+    }
+
+    if (req.body.defaultAddress) user.defaultAddress = address._id;
+
+    await user.save();
+
+    res.send({
+      success: "Address is added successfully",
+      defaultAddress: user.defaultAddress,
+      data: user.addressess,
+    });
+  })
+);
+
+router.patch(
+  "/userAddress/:addressId",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    const { error } = validateUserAddress(req.body);
+    if (error) return res.status(400).send({ error: error.details[0].message });
+
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    let address = await user.addressess.id(req.params.addressId);
+    if (!address) return res.status(400).send({ error: "Address not found" });
+
+    address.set(
+      _.pick(req.body, [
+        "address",
+        "area",
+        "city",
+        "name",
+        "phone",
+        "region",
+        "office",
+      ])
+    );
+
+    if (req.body.defaultAddress) user.defaultAddress = address._id;
+    await user.save();
+
+    res.send({
+      success: "Address is updated successfully",
+      defaultAddress: user.defaultAddress,
+      data: user.addressess,
+    });
+  })
+);
+
+router.delete(
+  "/userAddress/:addressId",
+  auth,
+  asyncMiddleware(async (req, res) => {
+    let user = await User.findById(req.user._id);
+    if (!user) return res.status(400).send({ error: "Invalide Id" });
+
+    let address = await user.addressess.id(req.params.addressId);
+    if (!address) return res.status(400).send({ error: "Address not found" });
+
+    address.remove();
+
+    await user.save();
+
+    res.send({
+      success: "Address is deleted successfully",
+      defaultAddress: user.defaultAddress,
+      data: user.addressess,
+    });
+  })
+);
+
+//-----------------------------------------------------------------------------------------------------
+
+//For Authentication
+router.post("/", async (req, res) => {
+  const { error } = validateUser(req.body);
+  if (error) return res.status(400).send({ error: error.details[0].message });
+
+  let user = await User.findOne({ email: req.body.email });
+  if (user) return res.status(400).send({ error: "User already registered" });
+
+  user = new User(
+    _.pick(req.body, ["name", "email", "password", "expoPushToken"])
+  );
+
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
+
+  await user.save();
+  sendVerificationEmail(user.email, user._id);
+
+  res.send({
+    success: "Please check your email to verify your accont",
+  });
+});
 
 router.get(
   "/authentication/:token",
@@ -225,7 +251,6 @@ router.get(
     try {
       const decoded = jwt.verify(token, config.get("jwtPrivateKey"));
       const user = await User.findById(decoded._id);
-      console.log(user);
       user.verified = true;
       user.save();
       res.render("EmailVerification");
@@ -273,11 +298,16 @@ router.post(
     }
 
     const token = user.generateAuthToken();
+    const refreshToken = user.generateRefreshToken();
     res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: token,
+      success: "Google Login Successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: token,
+        refreshToken: refreshToken,
+      },
     });
   })
 );

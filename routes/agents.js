@@ -3,19 +3,20 @@ const router = express.Router();
 const { Agent, validateAgent } = require("../models/agent");
 const asyncMiddleware = require("../middleware/async");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 router.get(
   "/allAgents",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     let agents = await Agent.find().select("-__v");
-    res.send({ data: agents });
+    res.send({ success: "Agents is fetched successfully", data: agents });
   })
 );
 
 router.get(
   "/",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const search = req.query.name ? new RegExp(req.query.name, "i") : /.*/;
     const count = await Agent.find({ name: search }).count();
@@ -35,13 +36,35 @@ router.get(
       return item._doc;
     });
 
-    res.send({ data: agents, count });
+    res.send({
+      success: "Agents is fetched successfully",
+      data: agents,
+      count,
+    });
+  })
+);
+
+router.get(
+  "/:id",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const agent = await Agent.findById(req.params.id);
+
+    if (!agent)
+      return res
+        .status(404)
+        .send({ error: "The agent with the given ID was not found" });
+
+    res.send({
+      success: "Agents is fetched successfully",
+      data: agent,
+    });
   })
 );
 
 router.post(
   "/",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateAgent(req.body);
     if (error) return res.status(400).send({ error: error.details[0].message });
@@ -58,13 +81,16 @@ router.post(
     });
 
     await agent.save();
-    res.send(agent);
+    res.send({
+      success: "Agent is added successfully",
+      data: agent,
+    });
   })
 );
 
 router.put(
   "/:id",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const { error } = validateAgent(req.body);
     if (error) return res.status(400).send({ error: error.details[0].message });
@@ -89,32 +115,27 @@ router.put(
         .status(404)
         .send({ error: "The agent with the given ID was not found" });
 
-    res.send(agent);
+    res.send({
+      success: "Agent is updated successfully",
+      data: agent,
+    });
   })
 );
 
 router.delete(
   "/:id",
-  auth,
+  [auth, admin],
   asyncMiddleware(async (req, res) => {
     const agent = await Agent.findByIdAndRemove(req.params.id);
     if (!agent)
-      return res.status(404).send("The agent with the given ID was not found");
+      return res
+        .status(404)
+        .send({ error: "The agent with the given ID was not found" });
 
-    res.send(agent);
-  })
-);
-
-router.get(
-  "/:id",
-  auth,
-  asyncMiddleware(async (req, res) => {
-    const agent = await Agent.findById(req.params.id);
-
-    if (!agent)
-      return res.status(404).send("The agent with the given ID was not found");
-
-    res.send(agent);
+    res.send({
+      success: "Agent is deleted successfully",
+      data: agent,
+    });
   })
 );
 
