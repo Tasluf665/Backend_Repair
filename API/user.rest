@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NjAzNjQ4MTEsImV4cCI6MTY2MDQwODAxMX0.8PMhuNed6ylINQA071d74B3gt0SmCXarA5y7C80vOnY
 
 ###
 
@@ -17,7 +17,12 @@ x-auth-token: {{token}}
 
 ###
 PATCH http://localhost:3001/api/users/update
+x-auth-token: {{token}}
 Content-Type: application/json
+
+{
+    "name": "Tasluf Morhshed"
+}
 
 ###
 

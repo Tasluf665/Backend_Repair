@@ -8,7 +8,7 @@ POST http://localhost:3001/api/auth/
 Content-Type: application/json
 
 {
-    "email": "tasluf665@gmail.com",
+    "email": "rhyme665@gmail.com",
     "password": "Raida2012"
 }
 
