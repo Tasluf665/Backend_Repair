@@ -2,6 +2,7 @@ const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 dotenv.config();
 const config = require("config");
@@ -42,6 +43,8 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({ origin: "*" }));
 app.use("/api/address", address);
 app.use("/api/agents", agents);
