@@ -1,7 +1,27 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Njc0NjUwODAsImV4cCI6MTY2NzUwODI4MH0.lipZrPyKNfZ3wwVvrsioDKqxzxvAuo3_0tH-tseb89U
 
 
 GET http://localhost:3001/api/orders?pageNumber=1&pageSize=10
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/orders/totalProfit
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/orders/countOrderCategory
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/orders/pendingOrder
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/orders/weeklySells
 x-auth-token: {{token}}
 
 ###

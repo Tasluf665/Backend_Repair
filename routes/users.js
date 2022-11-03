@@ -10,6 +10,7 @@ const axios = require("axios");
 const { User, validateUser, UserAddress } = require("../models/user");
 const { Order } = require("../models/order");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const asyncMiddleware = require("../middleware/async");
 const { sendVerificationEmail } = require("../utils/SendEmail");
 
@@ -310,6 +311,28 @@ router.post("/google", async (req, res) => {
     },
   });
 });
+
+//For user Number
+router.get(
+  "/userNumber",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const allUser = await User.find();
+
+    let count = 0;
+
+    allUser.forEach((user) => {
+      if (!user.isAdmin && user.verified) {
+        count++;
+      }
+    });
+
+    res.status(200).send({
+      success: "Total user is fetched successfully",
+      count,
+    });
+  })
+);
 
 function validateGoogleUser(user) {
   const schema = Joi.object({

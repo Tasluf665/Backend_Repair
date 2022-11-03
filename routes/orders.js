@@ -9,6 +9,7 @@ const admin = require("../middleware/admin");
 const _ = require("lodash");
 const Joi = require("joi");
 const fetch = require("node-fetch");
+const { findLastIndex } = require("lodash");
 
 router.get(
   "/",
@@ -53,6 +54,110 @@ router.get(
         data: sortedOrders,
         count,
       });
+    });
+  })
+);
+
+router.get(
+  "/totalProfit",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const allOrder = await Order.find();
+
+    let totalProfit = 0.0;
+
+    allOrder.forEach((order) => {
+      order.payment.forEach((element) => {
+        totalProfit += parseFloat(element.amount);
+      });
+    });
+
+    res.status(200).send({
+      success: "Total Profit is fetched successfully",
+      totalProfit,
+    });
+  })
+);
+
+router.get(
+  "/weeklySells",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const allOrder = await Order.find();
+
+    let count = 0;
+
+    allOrder.forEach((order) => {
+      let orderTime = new Date(order.bookingTime).getTime();
+      let before = new Date().getTime() - 518400000;
+      let now = new Date().getTime();
+
+      if (orderTime > before && orderTime <= now) {
+        count++;
+      }
+    });
+
+    res.status(200).send({
+      success: "Weekly Sells is fetched successfully",
+      count,
+    });
+  })
+);
+
+router.get(
+  "/pendingOrder",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const allOrder = await Order.find();
+
+    let count = 0;
+
+    allOrder.forEach((order) => {
+      if (
+        order.status[order.status.length - 1].statusState !== "Payment Complete"
+      ) {
+        count++;
+      }
+    });
+
+    res.status(200).send({
+      success: "Pending orders is fetched successfully",
+      count,
+    });
+  })
+);
+
+router.get(
+  "/countOrderCategory",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const allOrder = await Order.find();
+
+    let tv = 0;
+    let fridge = 0;
+    let ac = 0;
+    let fan = 0;
+
+    allOrder.forEach((order) => {
+      if (order.categoryType === "youtube-tv") {
+        tv++;
+      } else if (order.categoryType === "fridge") {
+        fridge++;
+      } else if (order.categoryType === "air-filter") {
+        ac++;
+      } else if (order.categoryType === "fan") {
+        fan++;
+      }
+    });
+
+    res.status(200).send({
+      success: "Categorized orders count is fetched successfully",
+      count: {
+        tv,
+        fridge,
+        ac,
+        fan,
+      },
     });
   })
 );

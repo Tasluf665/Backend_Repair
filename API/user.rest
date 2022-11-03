@@ -1,8 +1,13 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NjAzNjQ4MTEsImV4cCI6MTY2MDQwODAxMX0.8PMhuNed6ylINQA071d74B3gt0SmCXarA5y7C80vOnY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Njc0NjUwODAsImV4cCI6MTY2NzUwODI4MH0.lipZrPyKNfZ3wwVvrsioDKqxzxvAuo3_0tH-tseb89U
 
 ###
 
 GET http://localhost:3001/api/users/me
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/users/userNumber
 x-auth-token: {{token}}
 
 ###
