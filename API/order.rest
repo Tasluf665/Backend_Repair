@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Njc0NjUwODAsImV4cCI6MTY2NzUwODI4MH0.lipZrPyKNfZ3wwVvrsioDKqxzxvAuo3_0tH-tseb89U
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Njc2NTMyMDUsImV4cCI6MTY2NzY5NjQwNX0.t4KyeMtJm-KGIEv3vQFjY61WjAYL-cEIElr6YmdctR4
 
 
 GET http://localhost:3001/api/orders?pageNumber=1&pageSize=10
@@ -7,6 +7,11 @@ x-auth-token: {{token}}
 ###
 
 GET http://localhost:3001/api/orders/totalProfit
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/orders/sellsInMonth
 x-auth-token: {{token}}
 
 ###

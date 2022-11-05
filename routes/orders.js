@@ -105,6 +105,28 @@ router.get(
 );
 
 router.get(
+  "/sellsInMonth",
+  [auth, admin],
+  asyncMiddleware(async (req, res) => {
+    const allOrder = await Order.find();
+
+    let month = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    allOrder.forEach((order) => {
+      if (new Date(order.bookingTime).getFullYear === new Date().getFullYear) {
+        let monthIndex = new Date(order.bookingTime).getMonth();
+        month[monthIndex] += 1;
+      }
+    });
+
+    res.status(200).send({
+      success: "Sells in Month is fetched successfully",
+      month,
+    });
+  })
+);
+
+router.get(
   "/pendingOrder",
   [auth, admin],
   asyncMiddleware(async (req, res) => {
