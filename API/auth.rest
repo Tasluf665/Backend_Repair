@@ -4,7 +4,7 @@
 
 ###
 
-POST http://localhost:3001/api/auth/
+POST http://103.157.253.227:3001/api/auth/
 Content-Type: application/json
 
 {

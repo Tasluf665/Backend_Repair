@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "set NODE_ENV=development&& nodemon index.js",
+    "start-prod": "set NODE_ENV=production&& nodemon index.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -30,5 +32,9 @@
     "node-fetch": "^2.6.6",
     "nodemailer": "^6.7.7",
     "nodemon": "^2.0.19"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "supertest": "^6.3.1"
   }
 }
