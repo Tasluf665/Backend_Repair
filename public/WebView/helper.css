@@ -1,0 +1,52 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+h2{
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 3rem;
+}
+
+ul{
+    margin: 1.5rem;
+    list-style: none;
+}
+
+li{
+    margin-bottom: 2.5rem;
+}
+
+ul li::before {
+  content: "\2022";
+  color: red;
+  font-weight: bold;
+  font-size: 20px;
+  display: inline-block; 
+  width: 1em;
+  margin-left: -1em;
+}
+
+
+.title{
+    font-family: 'Lato', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    display: inline;
+}
+
+.description{
+    margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-align: justify;
+}
+
+.header{
+    background-color: black;
+    color: white;
+    padding: 3rem;
+}

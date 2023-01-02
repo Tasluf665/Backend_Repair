@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="helper.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="header">
+        <h2>User Help Certer</h2>
+    </div>
+    <script>
+        var ul = document.createElement("ul");
+        var info = [
+            {
+                id: "collapseExample1",
+                title: "How do I report an issue/complain?",
+                description: `If you face any problems while using this app, report it through the app. Also our helpline number: 13301 Or let us know your problem via mail. Our mail id: repairtest70@gmail.com`
+            },
+            {
+                id: "collapseExample2",
+                title: "My app is not working. What should I do?",
+                description: `In case your app is not working, follow the steps below: Go to your phone’s settings option> Go to App Settings> Go to Maps> Clear Cache> Clear Cache of your App`
+            },
+            {
+                id: "collapseExample3",
+                title: "How can I get a promo code?",
+                description: `You can get a discount by using your friends’ invite/referral code. We also send promo codes to our regular customers through SMS and app notifications, regularly.`
+            },
+            {
+                id: "collapseExample4",
+                title: "I was overcharged, please refund!",
+                description: `If you experience overcharging please report an issue through your user app. You can also mail us your complaint at repairtest70@gmail.com`
+            },
+        ]
+
+        info.forEach(element => {
+            var li = document.createElement("li");
+            var div1 = document.createElement("div");
+            div1.classList.add("title");
+            div1.setAttribute("data-toggle", "collapse");
+            div1.setAttribute("data-target", `#${element.id}`);
+            div1.setAttribute("aria-expanded", "false");
+            div1.setAttribute("aria-controls", element.id);
+            div1.innerHTML = element.title;
+
+            var div2 = document.createElement("div");
+            div2.classList.add("collapse");
+            div2.setAttribute("id", element.id);
+
+            var div3 = document.createElement("div");
+            div3.classList.add("card", "card-body", "description");
+            div3.innerHTML = element.description
+
+            div2.appendChild(div3);
+            li.appendChild(div1);
+            li.appendChild(div2);
+            ul.appendChild(li);
+        })
+
+        document.body.appendChild(ul);
+    </script>
+</body>
+
+</html>
