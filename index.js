@@ -56,6 +56,10 @@ app.use("/api/payments", payments);
 app.use("/api/products", products);
 app.use(error);
 
+app.get("/test", (req, res) => {
+  res.send("API is working");
+});
+
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 
