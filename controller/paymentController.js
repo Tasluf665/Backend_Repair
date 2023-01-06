@@ -42,8 +42,8 @@ module.exports.initPayment = async (req, res) => {
     cus_state: userDefaultAddress.region,
     cus_postcode: "1000",
     cus_country: "Bangladesh",
-    cus_phone: user.phone,
-    cus_fax: user.phone,
+    cus_phone: user.phone ? user.phone : " ",
+    cus_fax: user.phone ? user.phone : " ",
 
     ship_name: order.name,
     ship_add1: order.address,
@@ -58,26 +58,35 @@ module.exports.initPayment = async (req, res) => {
     value_d: "ref004_D",
   };
 
-  let fdata = new FormData();
-  for (let key in payData) {
-    fdata.append(key, payData[key]);
-  }
-
-  const response = await fetch(
-    "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
-    {
-      method: "POST",
-      body: fdata,
+  try {
+    let fdata = new FormData();
+    for (let key in payData) {
+      fdata.append(key, payData[key]);
     }
-  );
-  const data = await response.json();
 
-  if (data.status === "SUCCESS") {
-    return res.send({
-      success: "Gateway Page URL is fatched successfully",
-      data: data.GatewayPageURL,
-    });
-  } else {
-    return res.send("Failed to payment");
+    const response = await fetch(
+      "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
+      {
+        method: "POST",
+        body: fdata,
+      }
+    );
+    const data = await response.json();
+
+    if (data.status === "SUCCESS") {
+      return res.send({
+        success: "Gateway Page URL is fatched successfully",
+        data: data.GatewayPageURL,
+      });
+    } else {
+      return res.send("Failed to payment");
+    }
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: paymentController.js:67 ~ module.exports.initPayment= ~ error",
+      error
+    );
   }
+
+  return res.send("Failed to payment");
 };
