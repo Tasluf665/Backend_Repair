@@ -53,7 +53,7 @@ const technicianSchema = new mongoose.Schema({
       name: {
         type: String,
         required: true,
-        minlength: 5,
+        minlength: 1,
         maxlength: 50,
       },
       phone: {
