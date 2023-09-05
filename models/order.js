@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
+// Define a Mongoose schema for the 'status' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const statusSchema = new mongoose.Schema({
   statusDetails: {
     type: String,
@@ -21,8 +22,10 @@ const statusSchema = new mongoose.Schema({
   },
 });
 
+// Create a Mongoose model for the 'Status' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const Status = mongoose.model("Status", statusSchema);
 
+// Define a Mongoose schema for the 'payment' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const paymentSchema = new mongoose.Schema({
   tran_id: {
     type: String,
@@ -60,8 +63,10 @@ const paymentSchema = new mongoose.Schema({
   },
 });
 
+// Create a Mongoose model for the 'Payment' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const Payment = mongoose.model("Payment", paymentSchema);
 
+// Define a Mongoose schema for the 'order' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const orderSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -151,10 +156,19 @@ const orderSchema = new mongoose.Schema({
     required: false,
   },
 });
+
+// Create a Mongoose model for the 'Order' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const Order = mongoose.model("Order", orderSchema);
 
+/**
+ * Validate an 'order' object using Joi schema validation.
+ *
+ * @param {object} order - The order object to validate.
+ * @returns {object} - A Joi validation result object.
+ */
 function validateOrder(order) {
   const schema = Joi.object({
+    //https://www.youtube.com/watch?v=u9kxYilQ9l8
     name: Joi.string().min(1).max(50).required(),
     phone: Joi.string().min(1).max(15).required(),
     address: Joi.string().min(1).max(255).required(),

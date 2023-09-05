@@ -3,6 +3,7 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+// Define a Mongoose schema for the 'UserSchema' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const userAddressSchema = new mongoose.Schema({
   address: {
     type: String,
@@ -47,8 +48,10 @@ const userAddressSchema = new mongoose.Schema({
   },
 });
 
+// Create a Mongoose model for the 'UserAddress' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const UserAddress = mongoose.model("UserAddress", userAddressSchema);
 
+// Define a Mongoose schema for the 'notification' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const notificationSchema = new mongoose.Schema({
   statusDetails: {
     type: String,
@@ -73,8 +76,10 @@ const notificationSchema = new mongoose.Schema({
   },
 });
 
+// Create a Mongoose model for the 'Notification' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const Notification = mongoose.model("Notification", notificationSchema);
 
+// Define a Mongoose schema for the 'user' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -139,28 +144,46 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Generate an authentication token for the user.
+ *
+ * @returns {string} - A JWT authentication token.
+ */
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, isAdmin: this.isAdmin },
     config.get("jwtPrivateKey"),
-    { expiresIn: process.env.JWT_EXPIRATION_TIME }
+    { expiresIn: config.get("JWT_EXPIRATION_TIME") }
   );
   return token;
 };
 
+/**
+ * Generate a refresh token for the user.
+ *
+ * @returns {string} - A JWT refresh token.
+ */
 userSchema.methods.generateRefreshToken = function () {
   const refreshToken = jwt.sign(
     { _id: this._id, isAdmin: this.isAdmin },
-    process.env.REPAIR_JWT_REFRESH_TOKEN_PRIVATE_KEY,
-    { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME }
+    config.get("REPAIR_JWT_REFRESH_TOKEN_PRIVATE_KEY"),
+    { expiresIn: config.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME") }
   );
   return refreshToken;
 };
 
+// Create a Mongoose model for the 'User' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const User = mongoose.model("User", userSchema);
 
+/**
+ * Validate an 'user' object using Joi schema validation.
+ *
+ * @param {object} user - The user object to validate.
+ * @returns {object} - A Joi validation result object.
+ */
 function validateUser(user) {
   const schema = Joi.object({
+    //https://www.youtube.com/watch?v=u9kxYilQ9l8
     name: Joi.string().min(1).max(255).required(),
     expoPushToken: Joi.string().min(1).max(255),
     email: Joi.string().min(1).max(255).required().email(),

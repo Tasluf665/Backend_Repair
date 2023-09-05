@@ -1,10 +1,10 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NjgwNjUzODksImV4cCI6MTY2ODEwODU4OX0.tI1txbJ-eQNMpAGk6am37iu-Y2LDAW4xiyihEhsWjcQ"
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM4OTMzNjMsImV4cCI6MTY5MzkzNjU2M30.x9ieQvIsh9aLWRXuZENP6vmGzgZWIcla6v3wsYs3KnU
 
-@refresh_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NjgwNjUzODksImV4cCI6MTY3NTg0MTM4OX0.dCRcguOXGFI9oUCExpGULpcHAUHocUvgsmTgSDDk9lk
+@refresh_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM4OTMzNjMsImV4cCI6MTcwMTY2OTM2M30.smJvTL2Xr2ap7OLKSpqe6QqxU9ve_DCTJpTmr9qTcKQ
 
 ###
 
-POST http://103.157.253.227:3001/api/auth/
+POST http://192.168.0.108:3001/api/auth/
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ POST http://localhost:3001/api/auth/forgot-password
 Content-Type: application/json
 
 {
-    "email": "tasluf15-12089@diu.edu.bd"
+    "email": "rhyme665@gmail.com"
 }
 
 

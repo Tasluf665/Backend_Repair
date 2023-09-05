@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
+// Define a Mongoose schema for the 'agent' collection. Source: Mosh -> NodeJS course -> 7. CRUD  -> 5 - Schemas
 const agentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -49,10 +50,19 @@ const agentSchema = new mongoose.Schema({
     maxlength: 255,
   },
 });
+
+// Create a Mongoose model for the 'Agent' collection using the 'agentSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
 const Agent = mongoose.model("Agent", agentSchema);
 
+/**
+ * Validate an 'agent' object using Joi schema validation.
+ *
+ * @param {object} agent - The agent object to validate.
+ * @returns {object} - A Joi validation result object.
+ */
 function validateAgent(agent) {
   const schema = Joi.object({
+    //https://www.youtube.com/watch?v=u9kxYilQ9l8
     name: Joi.string().min(1).max(50).required(),
     email: Joi.string().min(0).max(255).email(),
     phone: Joi.string().min(1).max(15).required(),

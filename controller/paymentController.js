@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const FormData = require("form-data");
 const { User } = require("../models/user");
 const { Order } = require("../models/order");
+const config = require("config");
 
 module.exports.initPayment = async (req, res) => {
   let user = await User.findById(req.user._id);
@@ -18,16 +19,16 @@ module.exports.initPayment = async (req, res) => {
     "_" + Math.random().toString(36).substring(2, 9) + new Date().getTime();
 
   const payData = {
-    store_id: process.env.SSLCOMMERZ_STORE_ID,
-    store_passwd: process.env.SSLCOMMERZ_STORE_PASSWD,
+    store_id: config.get("SSLCOMMERZ_STORE_ID"),
+    store_passwd: config.get("SSLCOMMERZ_STORE_PASSWD"),
 
     total_amount: order.amount,
     currency: "BDT",
     tran_id: tran_id,
     multi_card_name: "mobilebank",
-    success_url: `${process.env.URL}/api/payments/paymentSuccess`,
-    fail_url: `${process.env.URL}/api/payments/paymentFail`,
-    cancel_url: `${process.env.URL}/api/payments/paymentCancel`,
+    success_url: `${config.get("URL")}/api/payments/paymentSuccess`,
+    fail_url: `${config.get("URL")}/api/payments/paymentFail`,
+    cancel_url: `${config.get("URL")}/api/payments/paymentCancel`,
 
     shipping_method: order.category,
     product_name: order.brand,

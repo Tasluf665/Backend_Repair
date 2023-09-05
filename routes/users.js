@@ -276,10 +276,10 @@ router.post("/google", async (req, res) => {
     return res.status(401).send({ error: "Unauthorized google auth token" });
 
   if (
-    result.data.issued_to !== process.env.REACT_NATIVE_APP_GOOGLE_CLIENT_ID &&
+    result.data.issued_to !== config.get("REACT_NATIVE_APP_GOOGLE_CLIENT_ID") &&
     result.data.issued_to !==
-      process.env.REACT_NATIVE_APP_GOOGLE_STANDAL_ONE_CLIENT_ID &&
-    result.data.issued_to !== process.env.REACT_APP_GOOGLE_CLIENT_ID
+      config.get("REACT_NATIVE_APP_GOOGLE_STANDAL_ONE_CLIENT_ID") &&
+    result.data.issued_to !== config.get("REACT_APP_GOOGLE_CLIENT_ID")
   )
     return res.status(401).send({ error: "Unauthorized google auth token" });
 

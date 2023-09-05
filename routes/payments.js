@@ -5,6 +5,7 @@ const { Order, Payment, Status } = require("../models/order");
 const { Notification, User } = require("../models/user");
 const fetch = require("node-fetch");
 const asyncMiddleware = require("../middleware/async");
+const config = require("config");
 
 const { initPayment } = require("../controller/paymentController");
 
@@ -14,7 +15,11 @@ router.post(
   "/paymentSuccess",
   asyncMiddleware(async (req, res) => {
     let response = await fetch(
-      `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${req.body.val_id}&store_id=${process.env.SSLCOMMERZ_STORE_ID}&store_passwd=${process.env.SSLCOMMERZ_STORE_PASSWD}&format=json`
+      `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${
+        req.body.val_id
+      }&store_id=${config.get("SSLCOMMERZ_STORE_ID")}&store_passwd=${config.get(
+        "SSLCOMMERZ_STORE_PASSWD"
+      )}&format=json`
     );
     let result = await response.json();
 

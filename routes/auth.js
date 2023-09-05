@@ -130,7 +130,7 @@ router.post(
     try {
       const decoded = jwt.verify(
         refreshToken,
-        process.env.REPAIR_JWT_REFRESH_TOKEN_PRIVATE_KEY
+        config.get("REPAIR_JWT_REFRESH_TOKEN_PRIVATE_KEY")
       );
 
       let user = await User.findById(decoded._id);
