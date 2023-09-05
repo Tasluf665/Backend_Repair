@@ -1,6 +1,6 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM4OTMzNjMsImV4cCI6MTY5MzkzNjU2M30.x9ieQvIsh9aLWRXuZENP6vmGzgZWIcla6v3wsYs3KnU
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM5NDgwMjIsImV4cCI6MTY5Mzk5MTIyMn0.6A6Fy5rIt0G7e1RmjXSuxvLvn3ipVwqUovB1fEpVRZg
 
-@refresh_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM4OTMzNjMsImV4cCI6MTcwMTY2OTM2M30.smJvTL2Xr2ap7OLKSpqe6QqxU9ve_DCTJpTmr9qTcKQ
+@refresh_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM5NDc4MzUsImV4cCI6MTcwMTcyMzgzNX0.6z-6h_UF2k_Lq1-Xpi6hzs6dNLqcR6ZbzVTpO2_Zzp4
 
 ###
 
@@ -9,12 +9,13 @@ Content-Type: application/json
 
 {
     "email": "rhyme665@gmail.com",
-    "password": "12345"
+    "password": "123456"
 }
 
 ###
 
-POST http://103.157.253.227:3001/api/auth/newToken
+POST http://192.168.0.108:3001/api/auth/newToken
+refresh-token: {{refresh_token}}
 
 
 

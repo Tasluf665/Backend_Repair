@@ -1,3 +1,4 @@
+//Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0ZDQzZjI3NTQ1YjVhZjVlNTUwNzciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYwMjIzMzk4LCJleHAiOjE2NjAyMjM0NTh9.ftUHO8Jyz85JBzqkLHAE4cL0zxdGvF0uWfcJFEKQJqU
 
 

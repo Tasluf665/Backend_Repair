@@ -1,9 +1,58 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+//Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
 
-GET http://localhost:3001/api/agents?pageNumber=2&pageSize=10
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM5MzQ4MTMsImV4cCI6MTY5Mzk3ODAxM30.4XX_a8FMd9-7Oj7ao4w-MEuEpiF9grmmAzz6cGsrbeI
+
+GET http://localhost:3001/api/agents?pageNumber=1&pageSize=10&name=t
 x-auth-token: {{token}}
 
 ###
 
 GET http://localhost:3001/api/agents/allAgents
 x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/agents/62eb2bdf4f51be3516a0bc9b
+x-auth-token: {{token}}
+
+###
+
+POST http://localhost:3001/api/agents
+x-auth-token: {{token}}
+Content-Type: application/json
+
+
+{
+    "name": "Nishat",
+    "email": "Nishat@gmail.com",
+    "phone": "019232442113",
+    "whatsappNumber": "019232442113",
+    "region": "Dhaka",
+    "city": "Munshiganj - Town",
+    "area": "Munshiganj Sadar Mirkadim",
+    "location": "Road 2/20"
+}
+
+###
+
+PUT http://localhost:3001/api/agents/64f776c6c3001aadf4f8c953
+x-auth-token: {{token}}
+Content-Type: application/json
+
+
+{
+    "name": "Nisha",
+    "email": "Nishat@gmail.com",
+    "phone": "019232442113",
+    "whatsappNumber": "019232442113",
+    "region": "Dhaka",
+    "city": "Munshiganj - Town",
+    "area": "Munshiganj Sadar Mirkadim",
+    "location": "Road 2/20"
+}
+
+###
+
+DELETE http://localhost:3001/api/agents/64f776c6c3001aadf4f8c953
+x-auth-token: {{token}}
+Content-Type: application/json
