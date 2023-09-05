@@ -37,7 +37,7 @@ const app = express(); // Initialize the Express application.
 // Set the view engine to EJS for rendering views. Source: https://www.youtube.com/watch?v=rKje9taS8BA
 app.set("view engine", "ejs");
 
-// Check for the presence of critical configuration variables. Source: Mosh -> NodeJS course -> 5. Express -> 7 - Configuration
+// Check for the presence of critical configuration variables. Source: Mosh -> NodeJS course -> 5. Express -> 7 - Configuration and 10. Authentication -> 10- Storing Secrets
 if (!config.get("jwtPrivateKey") || !config.get("DB_PASSWORD")) {
   console.error("FATAL ERROR: jwtPrivateKey or DB_PASSWORD is not define");
   process.exit(1);

@@ -19,7 +19,7 @@ const brandSchema = new mongoose.Schema({
     minlength: 1,
     maxlength: 255,
   },
-  models: [modelSchema],
+  models: [modelSchema], //Source: Mosh -> NodeJS course -> 9. Mongoose -> 4 - Embedding Documents
 });
 
 // Create a Mongoose model for the 'Brand' collection using the 'addressSchema'. Source: Mosh -> NodeJS course -> 7. CRUD  -> 6- Models
@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
     maxlength: 255,
   },
   brands: {
-    type: [brandSchema],
+    type: [brandSchema], //Source: Mosh -> NodeJS course -> 9. Mongoose -> 4 - Embedding Documents
     ref: "Brand",
     required: true,
   },

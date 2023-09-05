@@ -60,6 +60,7 @@ const notificationSchema = new mongoose.Schema({
     maxlength: 255,
   },
   orderId: {
+    //Source: Mosh -> NodeJS course -> 9. Mongoose -> 2- Referencing
     type: mongoose.Schema.Types.ObjectId,
     ref: "Order",
   },
@@ -126,19 +127,21 @@ const userSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Other"],
+    enum: ["Male", "Female", "Other"], //If we only want this 3 values.
   },
   birthday: {
     type: String,
     minlength: 1,
     maxlength: 30,
   },
-  addressess: [userAddressSchema],
-  notifications: [notificationSchema],
+  addressess: [userAddressSchema], //Source: Mosh -> NodeJS course -> 9. Mongoose -> 4 - Embedding Documents
+  notifications: [notificationSchema], //Source: Mosh -> NodeJS course -> 9. Mongoose -> 4 - Embedding Documents
   defaultAddress: {
+    //Source: Mosh -> NodeJS course -> 9. Mongoose -> 2- Referencing
     type: mongoose.Schema.Types.ObjectId,
   },
   orders: {
+    //Source: Mosh -> NodeJS course -> 9. Mongoose -> 2- Referencing
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Order",
   },
@@ -148,6 +151,7 @@ const userSchema = new mongoose.Schema({
  * Generate an authentication token for the user.
  *
  * @returns {string} - A JWT authentication token.
+ * Source: Mosh -> NodeJS course -> 10. Authentication -> 9- Generating, 10- Storing Secrets, 11- Setting, 12- Encapsulating
  */
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
@@ -162,6 +166,7 @@ userSchema.methods.generateAuthToken = function () {
  * Generate a refresh token for the user.
  *
  * @returns {string} - A JWT refresh token.
+ * Source: Mosh -> NodeJS course -> 10. Authentication -> 9- Generating, 10- Storing Secrets, 11- Setting, 12- Encapsulating
  */
 userSchema.methods.generateRefreshToken = function () {
   const refreshToken = jwt.sign(

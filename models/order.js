@@ -135,11 +135,11 @@ const orderSchema = new mongoose.Schema({
     maxlength: 255,
   },
   technicianId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId, //Source: Mosh -> NodeJS course -> 9. Mongoose -> 2- Referencing
     ref: "Technician",
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId, //Source: Mosh -> NodeJS course -> 9. Mongoose -> 2- Referencing
     ref: "User",
     required: true,
   },
@@ -148,11 +148,11 @@ const orderSchema = new mongoose.Schema({
     min: 0,
   },
   status: {
-    type: [statusSchema],
+    type: [statusSchema], //Source: Mosh -> NodeJS course -> 9. Mongoose -> 4 - Embedding Documents
     required: true,
   },
   payment: {
-    type: [paymentSchema],
+    type: [paymentSchema], //Source: Mosh -> NodeJS course -> 9. Mongoose -> 4 - Embedding Documents
     required: false,
   },
 });
