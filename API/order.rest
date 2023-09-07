@@ -1,5 +1,5 @@
 //Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Njc2NTMyMDUsImV4cCI6MTY2NzY5NjQwNX0.t4KyeMtJm-KGIEv3vQFjY61WjAYL-cEIElr6YmdctR4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTQwNDYwMDgsImV4cCI6MTY5NDA4OTIwOH0.0Q5U_DRjUlPLwBqGiEMu_x12kzvOR1X-MqePMnu3GH8
 
 
 GET http://localhost:3001/api/orders?pageNumber=1&pageSize=10
@@ -32,7 +32,7 @@ x-auth-token: {{token}}
 
 ###
 
-GET http://localhost:3001/api/orders/62e630117934c95149cced88
+GET http://localhost:3001/api/orders/62f6181007449a942bff0242
 x-auth-token: {{token}}
 
 ###
@@ -42,24 +42,24 @@ x-auth-token: {{token}}
 Content-Type: application/json
 
 {
+    "name": "Rhyme",
+    "phone": "01944501581",
     "address": "Road 2/3, Gazaria Char Decree, Munshiganj - Gajaria, Dhaka",
     "arrivalDate": "7/31/2022, 1:06:35 PM",
     "arrivalTime": "7/31/2022, 1:06:35 PM",
     "category": "Repairing",
     "categoryType": "fridge",
-    "name": "Rhyme",
-    "note": "Urgent",
-    "phone": "01944501581",
+    "brand": "Walton",
+    "model": "W32D120HG3 (813mm) HD ANDROID TV",
     "problem": "Water Dropping",
-    "product": "Samsung",
+    "note": "Urgent",
     "statusDetails": "Your order is pending",
     "statusState": "Pending"
-    "type": "LG",
 }
 
 ###
 
-PATCH http://localhost:3001/api/orders/accept/62e630117934c95149cced88
+PATCH http://localhost:3001/api/orders/accept/64f936f418637ecb9a3758e9
 x-auth-token: {{token}}
 Content-Type: application/json
 
@@ -71,7 +71,7 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:3001/api/orders/assigned/62e630117934c95149cced88
+PATCH http://localhost:3001/api/orders/assigned/64f936f418637ecb9a3758e9
 x-auth-token: {{token}}
 Content-Type: application/json
 
@@ -83,7 +83,7 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:3001/api/orders/repaired/62e630117934c95149cced88
+PATCH http://localhost:3001/api/orders/repaired/64f936f418637ecb9a3758e9
 x-auth-token: {{token}}
 Content-Type: application/json
 

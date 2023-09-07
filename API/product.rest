@@ -1,5 +1,5 @@
 //Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTQwNDYwMDgsImV4cCI6MTY5NDA4OTIwOH0.0Q5U_DRjUlPLwBqGiEMu_x12kzvOR1X-MqePMnu3GH8
 
 ###
 
@@ -23,18 +23,29 @@ Content-Type: application/json
 
 
 {
-    "brandName": "Sony Plus"
+    "brandName": "Oppo"
 }
 
 ###
 
-PATCH http://localhost:3001/api/products/addModelsArray/62f333284bcac8dd0e64fa53/62f333284bcac8dd0e64fa54
+PATCH http://localhost:3001/api/products/addModels/62f32a00657316510269a95f/62f32a00657316510269a960
 x-auth-token: {{token}}
 Content-Type: application/json
 
 
 {
-    "modelName": []
+    "modelName": "Demo"
+}
+
+###
+
+PATCH http://localhost:3001/api/products/addModelsArray/62f32a00657316510269a95f/62f32a00657316510269a960
+x-auth-token: {{token}}
+Content-Type: application/json
+
+
+{
+    "modelName": ["Demo1", "Demo2"]
 }
 
 ###
@@ -44,10 +55,10 @@ x-auth-token: {{token}}
 
 ###
 
-GET http://localhost:3001/api/products/brands/62f31997e09cbf3387a81a45
+GET http://localhost:3001/api/products/brands/62f32a00657316510269a95f
 x-auth-token: {{token}}
 
 ###
 
-GET http://localhost:3001/api/products/models/62f31997e09cbf3387a81a45/62f31997e09cbf3387a81a46
+GET http://localhost:3001/api/products/models/62f32a00657316510269a95f/62f32a00657316510269a960
 x-auth-token: {{token}}

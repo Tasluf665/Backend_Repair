@@ -1,6 +1,6 @@
 //Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTM5MzQ4MTMsImV4cCI6MTY5Mzk3ODAxM30.4XX_a8FMd9-7Oj7ao4w-MEuEpiF9grmmAzz6cGsrbeI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTQwNDYwMDgsImV4cCI6MTY5NDA4OTIwOH0.0Q5U_DRjUlPLwBqGiEMu_x12kzvOR1X-MqePMnu3GH8
 
 GET http://localhost:3001/api/agents?pageNumber=1&pageSize=10&name=t
 x-auth-token: {{token}}

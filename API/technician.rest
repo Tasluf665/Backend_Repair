@@ -1,5 +1,5 @@
 //Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRmZmM3OTE2MTZhMzY1ZmRmOTZiNzUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU5MDA2NTU1fQ.Bm7oKLxICF28viOl7eSYK5GQLrZxll6bNA_sqU7zURY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTQwNDYwMDgsImV4cCI6MTY5NDA4OTIwOH0.0Q5U_DRjUlPLwBqGiEMu_x12kzvOR1X-MqePMnu3GH8
 
 ###
 
@@ -13,7 +13,7 @@ x-auth-token: {{token}}
 
 ###
 
-GET http://localhost:3001/api/technicians/62da10613fa5b83ffeef747b
+GET http://localhost:3001/api/technicians/62eb2c284f51be3516a0bcb0
 x-auth-token: {{token}}
 
 ###
@@ -32,5 +32,30 @@ Content-Type: application/json
     "city": "Munshiganj",
     "area": "Mirkadim",
     "location": "Road 2/3",
-    "agentId": "62d5fceff1b34f8399763ed3"
+    "agentId": "62eb2bdf4f51be3516a0bc9b"
 }
+
+###
+
+PUT http://localhost:3001/api/technicians/64f948f60e6a0d5022bfebf1
+x-auth-token: {{token}}
+Content-Type: application/json
+
+
+{
+    "name": "Jakson2",
+    "email": "jakson2@gmail.com",
+    "phone": "01956140407",
+    "whatsappNumber": "01956140407",
+    "region": "Dhaka",
+    "city": "Munshiganj",
+    "area": "Mirkadim",
+    "location": "Road 2/3",
+    "agentId": "62eb2bdf4f51be3516a0bc9b"
+}
+
+###
+
+DELETE http://localhost:3001/api/technicians/64f948f60e6a0d5022bfebf1
+x-auth-token: {{token}}
+Content-Type: application/json
