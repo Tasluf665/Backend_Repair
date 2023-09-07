@@ -1,8 +1,18 @@
 //Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0ZDQzZjI3NTQ1YjVhZjVlNTUwNzciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjYwMjIzMzk4LCJleHAiOjE2NjAyMjM0NTh9.ftUHO8Jyz85JBzqkLHAE4cL0zxdGvF0uWfcJFEKQJqU
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTQwNDYwMDgsImV4cCI6MTY5NDA4OTIwOH0.0Q5U_DRjUlPLwBqGiEMu_x12kzvOR1X-MqePMnu3GH8
 
 
 ###
 
-GET http://localhost:3001/api/payments/62f4e7476504589c9758f578
+GET http://localhost:3001/api/payments/64f936f418637ecb9a3758e9
+x-auth-token: {{token}}
+
+###
+
+POST http://localhost:3001/api/payments/paymentCancel
+x-auth-token: {{token}}
+
+###
+
+POST http://localhost:3001/api/payments/paymentFail
 x-auth-token: {{token}}

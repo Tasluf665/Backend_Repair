@@ -1,24 +1,9 @@
 //Every time I have to refresh these tokens because they will be exparied after a period of time. To get new one I need to go to auth.rest and generate new tokens.
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Njc2NTMyMDUsImV4cCI6MTY2NzY5NjQwNX0.t4KyeMtJm-KGIEv3vQFjY61WjAYL-cEIElr6YmdctR4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmY0YjAxNjQxODE4ZjgzNmRkYWVjYjMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTQwNDYwMDgsImV4cCI6MTY5NDA4OTIwOH0.0Q5U_DRjUlPLwBqGiEMu_x12kzvOR1X-MqePMnu3GH8
 
 ###
 
 GET http://localhost:3001/api/users/me
-x-auth-token: {{token}}
-
-###
-
-GET http://localhost:3001/api/users/userNumber
-x-auth-token: {{token}}
-
-###
-
-GET http://localhost:3001/api/users/orders
-x-auth-token: {{token}}
-
-###
-
-GET http://localhost:3001/api/users/orders/62e5e6eb28a2386de0c602bd
 x-auth-token: {{token}}
 
 ###
@@ -32,28 +17,72 @@ Content-Type: application/json
 
 ###
 
+GET http://localhost:3001/api/users/orders
+x-auth-token: {{token}}
+
+###
+
+GET http://localhost:3001/api/users/orders/64f9313f51ad18ca1ca62192
+x-auth-token: {{token}}
+
+###
+
+POST  http://localhost:3001/api/users/userAddress
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "address": "Road 2/3",
+    "area": "Khulna",
+    "city": "Barishal",
+    "name": "Raida",
+    "phone": "01956140407",
+    "region": "Barishal",
+    "office": true,
+    "defaultAddress": false
+}
+
+###
+
+PATCH  http://localhost:3001/api/users/userAddress/64f9601bbecf8be334ebb56b
+x-auth-token: {{token}}
+Content-Type: application/json
+
+{
+    "address": "Road 2/3",
+    "area": "Khulna",
+    "city": "Barishal",
+    "name": "Tasluf",
+    "phone": "01956140407",
+    "region": "Barishal",
+    "office": false,
+    "defaultAddress": true
+}
+
+###
+
+DELETE  http://localhost:3001/api/users/userAddress/64f960c6d559049e41a5e96b
+x-auth-token: {{token}}
+
+###
+
 POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
     "name": "Tasluf Morhshed",
-    "email": "tasluf15-12089@diu.edu.bd",
+    "email": "abcs@diu.edu.bd",
     "password": "12345"
 }
 
 ###
 
-DELETE  http://localhost:3001/api/users/userAddress/62e26ba4ca526309ecca69ff
+GET http://localhost:3001/api/users/notifications
 x-auth-token: {{token}}
-Content-Type: application/json
 
-# {
-#     "address": "Road 2/3",
-#     "area": "Khulna",
-#     "city": "Barishal",
-#     "name": "R184640",
-#     "phone": "Barishal",
-#     "region": "Barishal",
-#     "office": true,
-#     "defaultAddress": false
-# }
+###
+
+GET http://localhost:3001/api/users/userNumber
+x-auth-token: {{token}}
+
+
