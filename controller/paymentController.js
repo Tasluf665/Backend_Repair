@@ -26,7 +26,12 @@ module.exports.initPayment = async (req, res) => {
   const tran_id =
     "_" + Math.random().toString(36).substring(2, 9) + new Date().getTime();
 
+  //local backend has URL = http://localhost:3001 but Production URL is = https://....com/
+  //It create conflict
+  let BackEndURL = config.get("URL");
+  BackEndURL = BackEndURL.endsWith("/") ? BackEndURL : BackEndURL + "/";
   // Define payment data for SSLCommerz integration
+
   const payData = {
     store_id: config.get("SSLCOMMERZ_STORE_ID"),
     store_passwd: config.get("SSLCOMMERZ_STORE_PASSWD"),
@@ -35,9 +40,9 @@ module.exports.initPayment = async (req, res) => {
     currency: "BDT",
     tran_id: tran_id,
     multi_card_name: "mobilebank",
-    success_url: `${config.get("URL")}/api/payments/paymentSuccess`,
-    fail_url: `${config.get("URL")}/api/payments/paymentFail`,
-    cancel_url: `${config.get("URL")}/api/payments/paymentCancel`,
+    success_url: `${BackEndURL}api/payments/paymentSuccess`,
+    fail_url: `${BackEndURL}api/payments/paymentFail`,
+    cancel_url: `${BackEndURL}api/payments/paymentCancel`,
 
     shipping_method: order.category,
     product_name: order.brand,
