@@ -73,7 +73,9 @@ router.get(
       jwt.verify(token, config.get("jwtPrivateKey"));
 
       // Render the 'ResetPasswordForm' view with the provided reset token.
-      res.render("ResetPasswordForm", { token: token });
+      let BackEndURL = config.get("URL");
+      BackEndURL = BackEndURL.endsWith("/") ? BackEndURL : BackEndURL + "/";
+      res.render("ResetPasswordForm", { token: token, BackEndURL: BackEndURL });
     } catch (ex) {
       // Handle invalid tokens with a 400 Bad Request response.
       res.status(400).send({ error: "Invalid token" });

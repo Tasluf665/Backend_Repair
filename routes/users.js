@@ -391,6 +391,7 @@ router.post("/google", async (req, res) => {
   const result = await axios.get(
     `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${req.body.accessToken}`
   );
+  console.log("🚀 ~ file: users.js:394 ~ router.post ~ result:", result);
 
   // If an error is present in the result, return a 401 Unauthorized error response
   if (result.error)
