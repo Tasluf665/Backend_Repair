@@ -51,8 +51,10 @@ const sendVerificationEmail = async (email, _id) => {
 
   // Define the email subject and message body with the activation token link.
   const subject = "Account Activation Link";
+  let BackEndURL = config.get("URL");
+  BackEndURL = BackEndURL.endsWith("/") ? BackEndURL : BackEndURL + "/";
   const message = `<h2>Please click on the given link to activate your account. This link will expire in 20 minutes</h2>
-  <p>${config.get("URL")}/api/users/authentication/${token}</p>
+  <p>${BackEndURL}/api/users/authentication/${token}</p>
   `;
 
   // Send the email with the activation token link.
@@ -76,8 +78,10 @@ const sendResetPasswordEmail = async (email, _id) => {
 
   // Define the email subject and message body with the reset token link.
   const subject = "Account Password Reset Link";
+  let BackEndURL = config.get("URL");
+  BackEndURL = BackEndURL.endsWith("/") ? BackEndURL : BackEndURL + "/";
   const message = `<h2>Please click on the given link to reset your account password. This link will expire in 20 minutes</h2>
-  <p>${config.get("URL")}/api/auth/reset-password/${token}</p>
+  <p>${BackEndURL}/api/auth/reset-password/${token}</p>
   `;
 
   // Send the email with the reset token link.
